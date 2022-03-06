@@ -1,0 +1,186 @@
+{% extends 'offcanvas.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% block main %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js"
+    integrity="sha512-9Dh726RTZVE1k5R1RNEzk1ex4AoRjxNMFKtZdcWaG2KUgjEmFYN3n17YLUrbHm47CRQB1mvVBHDFXrcnx/deDA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<section>
+    <div class="content-wrapper general-bg" style="padding-bottom: 5rem ">
+        <div class="row" id="proBanner">
+            <div class="col-12">
+                <span class="d-flex align-items-center purchase-popup">
+                    <img src="../../../static/img/logo/fav.png" width="70px" class="img-fluid" alt="" srcset="">
+                    <a href="{% url 'proposal' %}" class="btn purchase-button">View Profile <i
+                            class="las la-user-circle fill-white" style="font-size:1rem;color: white;"></i></a>
+                </span>
+            </div>
+        </div>
+        <div class="d-xl-flex justify-content-between align-items-start">
+            <h2 class="text-dark font-weight-bold mb-2"> Overview dashboard </h2>
+            <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
+                <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
+                    <button class="btn bg-white dropdown-toggle p-3 d-flex align-items-center" type="button"
+                        id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
+                            class="mdi mdi-calendar mr-1"></i>{{today}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row my-4">
+            <div class="col-md-3">
+                <div class="card text-white bg-primary h-100 d-card">
+                    <div class="card-body">
+                        <span>
+                            <i class="las la-box-open fill-white" style="font-size:2rem;"></i>
+                            <a href="{% url 'open' %}"
+                                style="float: right; color:rgb(255, 255, 255);font-weight: bold;  text-shadow: 0 1px 0 #0275d8;">View
+                                <i class="las la-arrow-right"></i></a>
+                        </span>
+                        <h3 class="card-title mt-3 mb-0">{{All_T}}</h3>
+                        <p class="card-text" style="text-shadow: 0 1px 0 #0275d8;">Open Tenders</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-success h-100 d-card">
+                    <div class="card-body">
+                        <span>
+                            <i class="las la-lock fill-white" style="font-size:2rem;"></i>
+                            <a href="{% url 'restricted' %}"
+                                style="float: right; color:white;font-weight: bold;  text-shadow: 0 1px 0 #5cb85c;">View
+                                <i class="las la-arrow-right"></i></a>
+                        </span>
+                        <h3 class="card-title mt-3 mb-0">{{RES}}</h3>
+                        <p class="card-text" style="text-shadow: 0 1px 0 #5cb85c;">Restricted Tenders</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-danger h-100 d-card">
+                    <div class="card-body">
+                        <span>
+                            <i class="las la-briefcase fill-white" style="font-size:2rem;"></i>
+                            <a href="{% url 'quote' %}"
+                                style="float: right; color:white;font-weight: bold;  text-shadow: 0 1px 0 #d9534f;">View
+                                <i class="las la-arrow-right"></i></a>
+                        </span>
+                        <h3 class="card-title mt-3 mb-0">{{RFQ}}</h3>
+                        <p class="card-text" style="text-shadow: 0 1px 0 #d9534f;">Request For Quotation</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="card text-white bg-info h-100 d-card">
+                    <div class="card-body">
+                        <span>
+                            <i class="las la-edit fill-white" style="font-size:2rem;"></i>
+                            <a href="{% url 'interest' %}"
+                                style="float: right; color:white;font-weight: bold;  text-shadow: 0 1px 0 #9933CC;">View
+                                <i class="las la-arrow-right"></i></a>
+                        </span>
+                        <h3 class="card-title mt-3 mb-0">{{EOI}}</h3>
+                        <p class="card-text" style="text-shadow: 0 1px 0 #9933CC;">Expression Of Interest</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-md-4">
+                <article class="postcard red">
+                    <div class="postcard__text">
+                        <h1 class="postcard__title">Product Director</h1>
+                        <div class="postcard__subtitle small">
+                            <time datetime="2020-05-25 12:00:00">
+                                <i class="las la-clock"></i> Mon, May 25th 2020
+                            </time>
+                        </div>
+                        <div class="postcard__bar"></div>
+                        <div class="postcard__preview-txt">
+                            As a Product Designer, you will work within a Product Delivery Team fused with UX,
+                            engineering, product and data talent.
+                        </div>
+                        <ul class="postcard__tagbox">
+                            <li class="tag__item"> <i class="las la-briefcase"></i> Experience : 2 - 3 years </li>
+                            <li class="tag__item play">
+                                <a href="#">View Job<i class="las la-angle-right"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <article class="postcard red">
+                    <div class="postcard__text">
+                        <h1 class="postcard__title">Product Director</h1>
+                        <div class="postcard__subtitle small">
+                            <time datetime="2020-05-25 12:00:00">
+                                <i class="las la-clock"></i> Mon, May 25th 2020
+                            </time>
+                        </div>
+                        <div class="postcard__bar"></div>
+                        <div class="postcard__preview-txt">
+                            As a Product Designer, you will work within a Product Delivery Team fused with UX,
+                            engineering, product and data talent.
+                        </div>
+                        <ul class="postcard__tagbox">
+                            <li class="tag__item"> <i class="las la-briefcase"></i> Experience : 2 - 3 years </li>
+                            <li class="tag__item play">
+                                <a href="#">View Job<i class="las la-angle-right"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+            <div class="col-md-4">
+                <article class="postcard red">
+                    <div class="postcard__text">
+                        <h1 class="postcard__title">Product Director</h1>
+                        <div class="postcard__subtitle small">
+                            <time datetime="2020-05-25 12:00:00">
+                                <i class="las la-clock"></i> Mon, May 25th 2020
+                            </time>
+                        </div>
+                        <div class="postcard__bar"></div>
+                        <div class="postcard__preview-txt">
+                            As a Product Designer, you will work within a Product Delivery Team fused with UX,
+                            engineering, product and data talent.
+                        </div>
+                        <ul class="postcard__tagbox">
+                            <li class="tag__item"> <i class="las la-briefcase"></i> Experience : 2 - 3 years </li>
+                            <li class="tag__item play">
+                                <a href="#">View Job<i class="las la-angle-right"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+        </div>
+        <div class="row mb-2">
+            <div id="pagination-container"></div>
+        </div>
+    </div>
+    </div>
+</section>
+<script>
+    var items = $(".postcard");
+    var numItems = items.length;
+    var perPage = 3;
+
+    items.slice(perPage).hide();
+
+    $("#pagination-container").pagination({
+        items: numItems,
+        itemsOnPage: perPage,
+        prevText: "<<",
+        nextText: ">>",
+        onPageClick: function (pageNumber) {
+            var showFrom = perPage * (pageNumber - 1);
+            var showTo = showFrom + perPage;
+            items.hide().slice(showFrom, showTo).show();
+        }
+    })
+</script>
+
+{% endblock %}

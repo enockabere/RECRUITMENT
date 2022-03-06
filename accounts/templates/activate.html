@@ -1,0 +1,14 @@
+{% autoescape  off %}
+
+
+Hi {{user}}
+
+Your secret code is : {{code}}
+
+Please use the link bellow to login and verify your account.
+
+http://{{domain}}{% url 'activate' uidb64=uid token=token %}
+
+
+
+{% endautoescape %}
