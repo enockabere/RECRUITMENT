@@ -158,6 +158,7 @@ ul.breadcrumb li a:hover {
 
 .postcard:hover {
     margin-top: -10px;
+    background: #5F6A6A;
 }
 
 .postcard h1,
@@ -165,6 +166,7 @@ ul.breadcrumb li a:hover {
     margin-bottom: 0.5rem;
     font-weight: 500;
     line-height: 1.2;
+    color: var(--green-color);
     display: inline-block;
 }
 
