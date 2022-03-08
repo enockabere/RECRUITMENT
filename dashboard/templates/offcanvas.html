@@ -97,54 +97,21 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" data-toggle="collapse" href="#ui-basic" aria-expanded="false"
-                        aria-controls="ui-basic">
-                        <span class="icon-bg"><i class="las la-briefcase"></i></span>
-                        <span class="menu-title">Tenders</span>
-                        <i class="las la-angle-down" id="drops"></i>
-                    </a>
-                    <div class="collapse" id="ui-basic">
-                        <ul class="nav flex-column sub-menu">
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'open' %}"><i
-                                        class="las la-arrow-right mr-2"></i> Open
-                                    Tenders</a>
-                            </li>
-                            <li class="nav-item"> <a class="nav-link" href="{% url 'restricted' %}"><i
-                                        class="las la-arrow-right mr-2"></i> Restricted
-                                    Tenders</a></li>
-                        </ul>
-                    </div>
-                </li>
-                <li class="nav-item">
                     <a class="nav-link" href="{% url 'job' %}">
                         <span class="icon-bg"><i class="mdi mdi-contacts menu-icon"></i></span>
                         <span class="menu-title">Company Jobs</span>
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="{% url 'interest' %}">
+                    <a class="nav-link" href="{% url 'applications' %}">
                         <span class="icon-bg"><i class="las la-check-circle"></i></span>
-                        <span class="menu-title">Expression of Interest</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{% url 'proposal' %}">
-                        <span class="icon-bg"><i class="las la-check-circle"></i></span>
-                        <span class="menu-title">Request For Proposal</span>
+                        <span class="menu-title">Applications</span>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'profile' %}">
                         <span class="icon-bg"><i class="las la-user-circle"></i></span>
                         <span class="menu-title">Profile</span>
-                    </a>
-                </li>
-                <li class="nav-item documentation-link">
-                    <a class="nav-link" href="#" target="_blank">
-                        <span class="icon-bg">
-                            <i class="las la-external-link-alt"></i>
-                        </span>
-                        <span class="menu-title">Open Tenders</span>
                     </a>
                 </li>
                 <li class="nav-item sidebar-user-actions">
@@ -165,7 +132,7 @@
         <div class="footer-inner-wraper">
             <div class="d-sm-flex justify-content-center justify-content-sm-between">
                 <span class="text-muted d-block text-center text-sm-left d-sm-inline-block text-dark">Copyright ©
-                    SCOTT CHRISTIAN UNIVERSITY
+                    Kenya Medical Practitioners and Dentists Council
                     {{year}}</span>
                 <p class="text-200"> Made with&nbsp;
                     <svg class="bi bi-suit-heart-fill" xmlns="http://www.w3.org/2000/svg" width="15" height="15"

@@ -9,11 +9,11 @@ import datetime
 # Create your views here.
 
 
-def CompanyJobs(request):
+def Applications(request):
     session = requests.Session()
     session.auth = config.AUTHS
 
-    Access_Point = config.O_DATA.format("/QyCompanyJobs")
+    Access_Point = config.O_DATA.format("/QyApplicants")
     year = request.session['years']
     try:
         response = session.get(Access_Point, timeout=10).json()
@@ -24,42 +24,47 @@ def CompanyJobs(request):
     todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
     ctx = {"today": todays_date, "year": year,
            "count": count, "res": res}
-    return render(request, 'job.html', ctx)
+    return render(request, "app.html", ctx)
 
 
-def JobDetail(request, pk):
+def AppDetail(request, pk):
     session = requests.Session()
     session.auth = config.AUTHS
 
-    Access_Point = config.O_DATA.format("/QyCompanyJobs")
-    Qualifications = config.O_DATA.format("/QyJobAcademicQualifications")
-    Experience = config.O_DATA.format("/QyJobExperienceQualifications")
-    Industry = config.O_DATA.format("/QyJobIndustries")
-    Memberships = config.O_DATA.format("/QyProfessionalMemberships")
+    Access_Point = config.O_DATA.format("/QyApplicantJobApplied")
+    Qualifications = config.O_DATA.format("/QyApplicantAcademicQualifications")
+    Experience = config.O_DATA.format("/QyApplicantJobExperience")
+    Courses = config.O_DATA.format("/QyApplicantJobProfessionalCourses")
+    Memberships = config.O_DATA.format("/QyApplicantProfessionalMemberships")
     res = ''
     E_response = ''
+    response = ''
     try:
         response = session.get(Access_Point, timeout=10).json()
         Qualifications_res = session.get(Qualifications, timeout=10).json()
         Experience_res = session.get(Experience, timeout=10).json()
-        Industry_res = session.get(Industry, timeout=10).json()
+        Courses_res = session.get(Courses, timeout=10).json()
         Memberships_res = session.get(Memberships, timeout=10).json()
 
-        All_Industry = Industry_res['value']
-        All_Memberships = Memberships_res['value']
-        for job in response['value']:
-            if job['Job_ID'] == pk:
-                res = job
+        for application in response['value']:
+            if application['Application_No_'] == pk:
+                res = application
         for Qualifications in Qualifications_res['value']:
-            if Qualifications['Job_ID'] == pk:
+            if Qualifications['Applicant_No_'] == pk:
                 response = Qualifications
+        for course in Courses_res['value']:
+            if course['Applicant_No_'] == pk:
+                my_course = course
+        for members in Memberships_res['value']:
+            if members['Applicant_No_'] == pk:
+                all_members = members
         for Experience in Experience_res['value']:
-            if Experience['Job_ID'] == pk:
+            if Experience['Applicant_No_'] == pk:
                 E_response = Experience
     except requests.exceptions.ConnectionError as e:
         print(e)
     todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
     ctx = {"today": todays_date, "res": res,
            "Qualifications": response, "experience": E_response,
-           "industry": All_Industry, "member": All_Memberships}
-    return render(request, 'jobDetail.html', ctx)
+           "course": my_course, "member": all_members}
+    return render(request, 'appDetail.html', ctx)

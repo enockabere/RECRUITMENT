@@ -76,12 +76,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'dashboard',
     'bootstrap5',
-    'tenders',
-    'quotation',
-    'interest',
     'accounts',
-    'Proposal',
     'jobs',
+    'applications',
 ]
 
 MIDDLEWARE = [
@@ -162,6 +159,8 @@ EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
+ENCRYPT_KEY = b'bzKNyzSwwsN0pwQKglGqPnMKPS6WTPElkRPoCOTYN0I='
+
 STATIC_URL = '/static/'
 MEDIA_URL = '/images/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
@@ -181,7 +180,7 @@ django_heroku.settings(locals())
 AUTHS = Session()
 
 WEB_SERVICE_PWD = 'Password@123'
-BASE_URL = 'http://20.121.189.145:7047/KMPDC/WS/KMPDC/Codeunit/WebPortal'
+BASE_URL = 'http://20.121.189.145:7047/KMPDC/WS/KMPDC/Codeunit/CuRecruitmentWebPortal'
 O_DATA = "http://20.121.189.145:7048/KMPDC/ODataV4/Company(%27KMPDC%27){}"
 AUTHS.auth = HTTPBasicAuth('WINNIE', WEB_SERVICE_PWD)
 

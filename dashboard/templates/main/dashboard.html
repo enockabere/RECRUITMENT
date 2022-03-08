@@ -12,8 +12,8 @@
             <div class="col-12">
                 <span class="d-flex align-items-center purchase-popup">
                     <img src="../../../static/img/logo/fav.png" width="70px" class="img-fluid" alt="" srcset="">
-                    <a href="{% url 'proposal' %}" class="btn purchase-button">View Profile <i
-                            class="las la-user-circle fill-white" style="font-size:1rem;color: white;"></i></a>
+                    <a href="" class="btn purchase-button">View Profile <i class="las la-user-circle fill-white"
+                            style="font-size:1rem;color: white;"></i></a>
                 </span>
             </div>
         </div>
@@ -34,7 +34,7 @@
                     <div class="card-body">
                         <span>
                             <i class="las la-box-open fill-white" style="font-size:2rem;"></i>
-                            <a href="{% url 'open' %}"
+                            <a href=""
                                 style="float: right; color:rgb(255, 255, 255);font-weight: bold;  text-shadow: 0 1px 0 #0275d8;">View
                                 <i class="las la-arrow-right"></i></a>
                         </span>
@@ -48,7 +48,7 @@
                     <div class="card-body">
                         <span>
                             <i class="las la-lock fill-white" style="font-size:2rem;"></i>
-                            <a href="{% url 'restricted' %}"
+                            <a href=""
                                 style="float: right; color:white;font-weight: bold;  text-shadow: 0 1px 0 #5cb85c;">View
                                 <i class="las la-arrow-right"></i></a>
                         </span>
@@ -62,8 +62,8 @@
                     <div class="card-body">
                         <span>
                             <i class="las la-briefcase fill-white" style="font-size:2rem;"></i>
-                            <a href="{% url 'quote' %}"
-                                style="float: right; color:white;font-weight: bold;  text-shadow: 0 1px 0 #d9534f;">View
+                            <a href="" style=" float: right; color:white;font-weight: bold; text-shadow: 0 1px 0
+                                #d9534f;">View
                                 <i class="las la-arrow-right"></i></a>
                         </span>
                         <h3 class="card-title mt-3 mb-0">{{RFQ}}</h3>
@@ -76,7 +76,7 @@
                     <div class="card-body">
                         <span>
                             <i class="las la-edit fill-white" style="font-size:2rem;"></i>
-                            <a href="{% url 'interest' %}"
+                            <a href=""
                                 style="float: right; color:white;font-weight: bold;  text-shadow: 0 1px 0 #9933CC;">View
                                 <i class="las la-arrow-right"></i></a>
                         </span>
@@ -105,7 +105,8 @@
                         <ul class="postcard__tagbox">
                             <li class="tag__item"> <i class="las la-briefcase"></i> Experience : 2 - 3 years </li>
                             <li class="tag__item play">
-                                <a href="#">View Job<i class="las la-angle-right"></i></a>
+                                <a href="{% url 'jobDetail' res.Job_ID %}">View Job<i
+                                        class="las la-angle-right"></i></a>
                             </li>
                         </ul>
                     </div>

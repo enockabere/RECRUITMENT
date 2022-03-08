@@ -1,0 +1,562 @@
+{% extends 'offcanvas.html' %}
+{% load bootstrap5 %}
+{% load static %}
+{% block main %}
+<section class="dash2">
+    <div class="content-wrapper" style="padding-bottom: 3rem;">
+        <div class="d-xl-flex justify-content-between align-items-start">
+            <h2 class="text-dark font-weight-bold mb-2"> Job Detail
+            </h2>
+            <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
+                <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
+                    <button class="btn bg-white dropdown-toggle p-3 d-flex align-items-center" type="button"
+                        id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
+                            class="mdi mdi-calendar mr-1"></i>{{today}}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!--alert -->
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <div class="alert alert-success d-flex align-items-center alert-dismissible alert-success" role="alert">
+            <i class="las la-check-double" style="color: white;font-size: 2rem"></i>
+            <div class="a-icon mx-2">
+                {{message}}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-danger d-flex align-items-center alert-dismissible alert-warn" role="alert">
+            <i class="las la-exclamation-triangle" style="color: white;font-size: 2rem"></i>
+            <div class="a-icon mx-2">
+                {{message}}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        <div class="row my-3">
+            <div class="col-md-12">
+                <form class="row g-3">
+                    <div class="col-md-4">
+                        <label class="form-label">Application No</label>
+                        <input type="text" class="form-control" placeholder="{{res.Application_No_}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Job Applied</label>
+                        <input type="text" class="form-control" placeholder="{{res.Job}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Submitted</label>
+                        <input type="text" class="form-control" placeholder="{{res.Submitted}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Shortlist</label>
+                        <input type="text" class="form-control" placeholder="{{res.Shortlist}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Qualified</label>
+                        <input type="text" class="form-control" placeholder="{{res.Qualified}}" readonly>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Interviewed</label>
+                        <input type="text" class="form-control" placeholder="{{res.Interviewed}}" readonly>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <div class="row mt-5">
+            <div class="col-md-8">
+                <div class="card jcard">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="j-data">
+                                <div class="row my-3">
+                                    <div class="col-md-12">
+                                        <h5>Academic Qualifications</h5>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Education Type</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{Qualifications.Education_Type}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Institution Name</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{Qualifications.Institution_Name}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Start Date</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{Qualifications.Start_Date}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">End Date</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{Qualifications.End_Date}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Proficiency Level</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{Qualifications.Proficiency_Level}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Highest Level</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{Qualifications.Highest_Level}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Field of Study</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{Qualifications.Field_of_Study}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Country</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{Qualifications.Country}}" readonly>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <h5>Experience</h5>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <form class="row g-3">
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Employer</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Employer}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Industry</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Industry}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Start Date</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Start_Date}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">End Date</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.End_Date}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Hierarchy Level</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Hierarchy_Level}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Functional Area</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Functional_Area}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Job Title</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Job_Title}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Present Employment</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Present_Employment}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">No of Years</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.No__of_Years}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Country</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Country}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Location</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Location}}" readonly>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label class="form-label">Employer Email Address</label>
+                                                        <input type="text" class="form-control"
+                                                            placeholder="{{experience.Employer_Email_Address}}"
+                                                            readonly>
+                                                    </div>
+                                                    <div class="col-md-12">
+                                                        <label class="form-label">Description</label>
+                                                        <textarea class="form-control"
+                                                            placeholder="{{experience.Description}}"
+                                                            readonly></textarea>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card jcard p-3">
+                    <div class="row">
+                        <div class="j-data">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5>Professional Courses</h5>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-user-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Qualification Name
+                                        </h6>
+                                        <small>
+                                            {{course.Qualification_Name}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-star"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Section Level
+                                        </h6>
+                                        <small>
+                                            {{course.Section_Level}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card jcard my-3 p-3">
+                    <div class="row">
+                        <div class="j-data">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5>Professional Memberships</h5>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-user-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Membership No
+                                        </h6>
+                                        <small>
+                                            {{member.MembershipNo}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-star"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Professional Body
+                                        </h6>
+                                        <small>
+                                            {{member.Professional_Body}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-hand-holding-usd"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Description
+                                        </h6>
+                                        <small>
+                                            {{member.Description}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card jcard my-3 p-3">
+                    <div class="row">
+                        <div class="j-data">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5>Referees</h5>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-user-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Job Title
+                                        </h6>
+                                        <small>
+                                            Product Designer
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-star"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Experience
+                                        </h6>
+                                        <small>
+                                            0-3 Years
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-hand-holding-usd"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Offered Salary
+                                        </h6>
+                                        <small>
+                                            35k - 45k
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-graduation-cap"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Qualification
+                                        </h6>
+                                        <small>
+                                            Bachelor Degree
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-clock"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Date Posted
+                                        </h6>
+                                        <small>
+                                            Posted 2 hrs ago
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card jcard my-3 p-3">
+                    <div class="row">
+                        <div class="j-data">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <h5>Hobbies</h5>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-user-alt"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Membership No
+                                        </h6>
+                                        <small>
+                                            {{member.MembershipNo}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-star"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Professional Body
+                                        </h6>
+                                        <small>
+                                            {{member.Professional_Body}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-md-3">
+                                    <div class="j-icon">
+                                        <i class="las la-hand-holding-usd"></i>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="j-o-text">
+                                        <h6>
+                                            Description
+                                        </h6>
+                                        <small>
+                                            {{member.Description}}
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<div class="modal fade" id="dynamic{{res.Job_ID}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="staticBackdropLabel">Job Application -
+                    {{res.Job_ID}}
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="" class="myForm needs-validation" novalidate>
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="name" class="form-label">First Name</label>
+                            <input type="text" class="form-control" name="firstname" required>
+                            <div class="invalid-feedback">
+                                Please Provide Your First Name.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="name" class="form-label">Last Name</label>
+                            <input type="text" class="form-control" name="lastname" required>
+                            <div class="invalid-feedback">
+                                Please Provide Your Last Name.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="name" class="form-label">Email</label>
+                            <input type="email" class="form-control" name="email" required>
+                            <div class="invalid-feedback">
+                                Please Provide Your Email.
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <label for="leaveType" class="form-label"> Your Industry</label>
+                            <select class="form-select" name="industry" required>
+                                <option selected disabled value="">Choose...</option>
+                                {% for res in industry %}
+                                <option value="{{res.Code}}">{{res.Description}}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please Select a Valid Industry.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="leaveType" class="form-label"> Professional Memberships</label>
+                            <select class="form-select" name="industry">
+                                <option selected disabled value="">Choose...</option>
+                                {% for res in member %}
+                                <option value="{{res.Name}}">{{res.Name}}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="leaveType" class="form-label"> Your Industry</label>
+                            <select class="form-select" name="industry" required>
+                                <option selected disabled value="">Choose...</option>
+                                {% for res in industry %}
+                                <option value="{{res.Code}}">{{res.Description}}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="invalid-feedback">
+                                Please Select a Valid Industry.
+                            </div>
+                        </div>
+                    </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="hey">Discard</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

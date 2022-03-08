@@ -1,3 +1,4 @@
+import base64
 import threading
 from django.http import response
 from django.shortcuts import redirect, render, HttpResponse
@@ -7,18 +8,10 @@ import requests
 from requests import Session
 from requests_ntlm import HttpNtlmAuth
 import datetime
-from django.urls import reverse
 from datetime import date
-from django.core.mail import EmailMessage
-from django.template.loader import render_to_string
 from django.contrib import messages
-from django.contrib.sites.shortcuts import get_current_site
-from . models import Users
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.utils.encoding import force_bytes, force_text, force_str, DjangoUnicodeDecodeError
-from .utils import generate_token
-import secrets
-import string
+from cryptography.fernet import Fernet
+import re
 # Create your views here.
 
 
@@ -30,16 +23,30 @@ def profile_request(request):
 def login_request(request):
     todays_date = date.today()
     year = todays_date.year
-    request.session['years'] = year
+    session = requests.Session()
+    session.auth = config.AUTHS
+
+    Access_Point = config.O_DATA.format("/QyApplicants")
+
     if request.method == 'POST':
+
         try:
-            email = request.POST.get('email')
-            password = request.POST.get('password')
+            email = request.POST.get('email').strip()
+            password = str(request.POST.get('password')).strip()
         except ValueError:
             print("Invalid credentials, try again")
             return redirect('login')
-        user = Users.objects.get(email=email)
-        if user.email == email and user.password == password:
+        try:
+            response = session.get(Access_Point, timeout=10).json()
+            for applicant in response['value']:
+                if applicant['E_Mail'] == email:
+                    res = applicant
+        except requests.exceptions.ConnectionError as e:
+            print(e)
+        Portal_Password = base64.urlsafe_b64decode(res['Portal_Password'])
+        cipher_suite = Fernet(config.ENCRYPT_KEY)
+        decoded_text = cipher_suite.decrypt(Portal_Password).decode("ascii")
+        if decoded_text == password:
             return redirect('dashboard')
         else:
             messages.error(
@@ -49,78 +56,43 @@ def login_request(request):
     return render(request, 'login.html', ctx)
 
 
-class EmailThread(threading.Thread):
-    def __init__(self, email):
-        self.email = email
-        threading.Thread.__init__(self)
-
-    def run(self):
-        self.email.send()
-
-
-def activate_user(request, uidb64, token):
-    try:
-        uid = force_text(urlsafe_base64_decode(uidb64))
-        user = Users.objects.get(pk=uid)
-    except Exception as e:
-        user = None
-    if user and generate_token.check_token(user, token):
-        messages.success(
-            request, "Email verified, you can now login")
-        return redirect(reverse('login'))
-    return render(request, 'activate-failed.html')
-
-
 def register_request(request):
     todays_date = date.today()
     year = todays_date.year
-
-    firstname = ''
-    lastname = ''
     email = ''
     password = ''
     confirm_password = ''
+    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
+
     if request.method == 'POST':
         try:
-            firstname = request.POST.get('firstname').strip()
-            lastname = request.POST.get('lastname').strip()
             email = request.POST.get('email').strip()
-            password = request.POST.get('password').strip()
-            confirm_password = request.POST.get('confirm_password').strip()
+            my_password = str(request.POST.get('password')).strip()
+            confirm_password = str(
+                request.POST.get('confirm_password')).strip()
         except ValueError:
             print("Invalid credentials, try again")
             return redirect('register')
-        if len(password) < 6:
+        if len(my_password) < 6:
             messages.error(request, "Password should be at least 6 characters")
             return redirect('register')
-        if password != confirm_password:
+        if my_password != confirm_password:
             messages.error(request, "Password mismatch")
             return redirect('register')
+        cipher_suite = Fernet(config.ENCRYPT_KEY)
 
-        user = Users.objects.create(
-            firstname=firstname,
-            lastname=lastname,
-            email=email,
-            password=password,
-        )
-        alphabet = string.ascii_letters + string.digits
-        SecretCode = ''.join(secrets.choice(alphabet) for i in range(5))
-        request.session['SecretCode'] = SecretCode
-        current_site = get_current_site(request)
-        email_subject = 'Activate your account'
-        email_body = render_to_string('activate.html', {
-            "user": user.firstname,
-            "domain": current_site,
-            'uid': urlsafe_base64_encode(force_bytes(user.pk)),
-            "token": generate_token.make_token(user),
-            "code": SecretCode
-        })
-        email = EmailMessage(subject=email_subject, body=email_body,
-                             from_email=config.EMAIL_HOST_USER, to=[user.email])
-        EmailThread(email).start()
-        messages.success(
-            request, "We sent you an email to verify your account")
-        return redirect('register')
-    print(request.session['SecretCode'])
+        encrypted_text = cipher_suite.encrypt(my_password.encode('ascii'))
+        password = base64.urlsafe_b64encode(encrypted_text).decode("ascii")
+
+        try:
+            response = config.CLIENT.service.FnApplicantRegister(
+                email, password)
+            messages.success(
+                request, "Account successfully created, you can now login")
+            print(response)
+            return redirect('login')
+        except Exception as e:
+            messages.error(request, e)
+            print(e)
     ctx = {"year": year}
     return render(request, "register.html", ctx)

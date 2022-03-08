@@ -307,3 +307,67 @@ ul.breadcrumb li a:hover {
     border: none;
     text-align: center !important;
 }
+
+.j-image img {
+    width: 100%;
+    height: 300px;
+    margin-top: -1rem;
+}
+
+.j-data {
+    padding: 1rem 1rem 1rem 1rem;
+}
+
+.j-data h5 {
+    color: var(--first-color);
+    font-family: var(--third-font);
+    text-shadow: 0 1px 0 white;
+    font-weight: bold;
+}
+
+.j-data p {
+    color: #222;
+    font-family: var(--third-font);
+    text-shadow: 0 1px 0 white;
+}
+
+.j-data li {
+    color: #222;
+    font-family: var(--third-font);
+    text-shadow: 0 1px 0 white;
+    list-style: none;
+}
+
+.j-data li::before {
+    content: ">>";
+    padding-right: 8px;
+    color: blue;
+}
+
+.j-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgb(202, 202, 202);
+    display: table-cell;
+    vertical-align: middle;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.j-icon i {
+    color: var(--red-color);
+    font-size: 1.5rem;
+}
+
+.j-o-text {
+    text-align: left;
+}
+
+.j-o-text h6 {
+    color: #000;
+}
+
+.j-o-text small {
+    color: #222;
+}
