@@ -64,7 +64,7 @@
                                                         <h5>Personal Information</h5>
                                                         <div class="row my-4">
                                                             <div class="col-md-12">
-                                                                {% if fullname %}
+                                                                {% if applicant %}
                                                                 <div class="accordion" id="accordionExample">
                                                                     <div class="item">
                                                                         <div class="item-header"
@@ -185,7 +185,10 @@
                                                 </div>
                                                 <div class="row my-3">
                                                     <div class="col-md-12">
-                                                        <h5>Academic Qualifications</h5>
+                                                        <h5>Academic Qualifications =><span
+                                                                style="font-size:1rem;color:#000;"> [Add More Entries on
+                                                                Profile Tab]</span>
+                                                        </h5>
                                                         <div class="row my-4">
                                                             <div class="col-md-12">
                                                                 {% if Qualify %}
@@ -316,7 +319,9 @@
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-md-12">
-                                                        <h5>Experience</h5>
+                                                        <h5>Experience <span style="font-size:1rem;color:#000;"> [Add
+                                                                More Entries on
+                                                                Profile Tab]</span></h5>
                                                         <div class="row my-4">
                                                             <div class="col-md-12">
                                                                 {% if experience %}
@@ -486,7 +491,9 @@
                                                 </div>
                                                 <div class="row my-3">
                                                     <div class="col-md-12">
-                                                        <h5>Professional Courses</h5>
+                                                        <h5>Professional Courses <span
+                                                                style="font-size:1rem;color:#000;"> [Add More Entries on
+                                                                Profile Tab]</span></h5>
                                                         <div class="row my-4">
                                                             <div class="col-md-12">
                                                                 {% if course %}
@@ -565,7 +572,9 @@
                                                 </div>
                                                 <div class="row my-3">
                                                     <div class="col-md-12">
-                                                        <h5>Professional Memberships</h5>
+                                                        <h5>Professional Memberships <span
+                                                                style="font-size:1rem;color:#000;"> [Add More Entries on
+                                                                Profile Tab]</span></h5>
                                                         <div class="row my-4">
                                                             <div class="col-md-12">
                                                                 {% if membership %}
@@ -645,7 +654,9 @@
                                                 </div>
                                                 <div class="row my-3">
                                                     <div class="col-md-12">
-                                                        <h5>Hobbies
+                                                        <h5>Hobbies <span style="font-size:1rem;color:#000;"> [Add More
+                                                                Entries on
+                                                                Profile Tab]</span>
                                                         </h5>
                                                         <div class="row my-4">
                                                             <div class="col-md-12">
@@ -717,7 +728,9 @@
                                                 </div>
                                                 <div class="row my-3">
                                                     <div class="col-md-12">
-                                                        <h5>Referees</h5>
+                                                        <h5>Referees <span style="font-size:1rem;color:#000;"> [Add More
+                                                                Entries on
+                                                                Profile Tab]</span></h5>
                                                         <div class="row my-4">
                                                             <div class="col-md-12">
                                                                 {% if Referee %}
@@ -845,7 +858,7 @@
                                         </button>
                                     </h2>
                                 </div>
-                                <div id="collapseOne" class="collapse show" aria-labelledby="headingOne"
+                                <div id="collapseOne" class="collapse " aria-labelledby="headingOne"
                                     data-parent="#accordionExample">
                                     <div class="t-p">
                                         <form action="{% url 'FnApplicantDetails' %}" method="post"
