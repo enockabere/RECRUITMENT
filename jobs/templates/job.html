@@ -6,7 +6,7 @@
 <section>
     <div class="content-wrapper general-bg" style="padding-bottom: 1rem;">
         <div class="d-xl-flex justify-content-between align-items-start">
-            <h2 class="text-dark font-weight-bold mb-2"> Open Jobs</h2>
+            <h2 class="text-dark font-weight-bold mb-2"> Company Jobs</h2>
             <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
                 <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
                     <button class="btn bg-white dropdown-toggle p-3 d-flex align-items-center" type="button"
@@ -16,19 +16,45 @@
                 </div>
             </div>
         </div>
+        <!--alert -->
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <div class="alert alert-success d-flex align-items-center alert-dismissible alert-success" role="alert">
+            <i class="las la-check-double" style="color: white;font-size: 2rem"></i>
+            <div class="a-icon mx-2">
+                {{message}}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-danger d-flex align-items-center alert-dismissible alert-warn" role="alert">
+            <i class="las la-exclamation-triangle" style="color: white;font-size: 2rem"></i>
+            <div class="a-icon mx-2">
+                {{message}}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
         <div class="row my-2">
             <div class="col-md-12">
                 <div class="card" id="d-card">
                     <div class="m-4">
                         <ul class="nav nav-tabs" id="myTab">
                             <li class="nav-item">
-                                <a href="#home" class="nav-link active" data-bs-toggle="tab"> Open Jobs
+                                <a href="#home" class="nav-link active" data-bs-toggle="tab"> Open Vacancies
                                     ({{count}})</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#profile" class="nav-link" data-bs-toggle="tab">Submitted Job Applications
+                                    ({{counter}})</a>
                             </li>
                         </ul>
                         <div class="tab-content">
                             <div class="tab-pane fade show active" id="home">
-                                <h4 class="mt-2 text-dark">Open Jobs List</h4>
+                                <h4 class="mt-2 text-dark">Open Vacancy List</h4>
                                 <div class="card-body">
                                     <table id="example"
                                         class="table table-striped table-bordered dt-responsive table-responsive-lg"
@@ -37,9 +63,9 @@
                                             <tr id="tops">
                                                 <th id="long">Job ID</th>
                                                 <th>Job Description</th>
-                                                <th>Grade</th>
-                                                <th>Department</th>
-                                                <th>Objective</th>
+                                                <th>Positions</th>
+                                                <th>Appointment Type</th>
+                                                <th>Priority</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -47,10 +73,10 @@
                                             {% for res in res %}
                                             <tr>
                                                 <td>{{res.Job_ID}}</td>
-                                                <td id="rap">{{res.Job_Description}}</td>
-                                                <td>{{res.Grade}}</td>
-                                                <td>{{res.Department_Name}}</td>
-                                                <td>{{res.Objective}}</td>
+                                                <td id="rap">{{res.Description}}</td>
+                                                <td>{{res.Positions}}</td>
+                                                <td>{{res.Appointment_Type}}</td>
+                                                <td>{{res.Priority}}</td>
                                                 <td>
                                                     <a type="button" href="{% url 'jobDetail' res.Job_ID %}"
                                                         class="btn btn-success btn-icon-text" data-toggle="tooltip"
@@ -60,6 +86,51 @@
                                                     </a>
                                                 </td>
 
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div class="tab-pane fade" id="profile">
+                                <h4 class="mt-2">Submitted Job Applications</h4>
+                                <div class="card-body">
+                                    <table id="example"
+                                        class="table table-striped table-bordered dt-responsive table-responsive-lg"
+                                        style="width:100%">
+                                        <thead>
+                                            <tr id="tops">
+                                                <th>Job</th>
+                                                <th>Submitted</th>
+                                                <th>Qualified</th>
+                                                <th>Shortlist</th>
+                                                <th>Cancel Application</th>
+                                                <th>Action</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {% for res in sub %}
+                                            <tr>
+                                                <td>{{res.Job}}</td>
+                                                <td>{{res.Submitted}}</td>
+                                                <td>{{res.Qualified}}</td>
+                                                <td>{{res.Shortlist}}</td>
+                                                <td>
+                                                    <form action="{% url 'FnWithdrawJobApplication' %}" method="post">
+                                                        {% csrf_token %}
+                                                        <input type="hidden" name="needCode" value="{{res.Need_Code}}">
+                                                        <button type="submit"> <i class="las la-trash"
+                                                                style="font-size: 1.5rem;"></i></button>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <a type="button" href="{% url 'jobDetail' res.Job_ID %}"
+                                                        class="btn btn-success btn-icon-text" data-toggle="tooltip"
+                                                        data-placement="top" title="view"
+                                                        style="background: #25CC88;">View Job
+                                                        <i class="las la-external-link-alt" style="font-size: 1rem"></i>
+                                                    </a>
+                                                </td>
                                             </tr>
                                             {% endfor %}
                                         </tbody>

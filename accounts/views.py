@@ -12,12 +12,110 @@ from datetime import date
 from django.contrib import messages
 from cryptography.fernet import Fernet
 import re
+import enum
 # Create your views here.
 
 
 def profile_request(request):
+    todays_date = date.today()
+    year = todays_date.year
+    session = requests.Session()
+    session.auth = config.AUTHS
 
-    return render(request, 'profile.html')
+    citizenship = config.O_DATA.format("/CountryRegion")
+    countyCode = config.O_DATA.format("/QyCounties")
+    industry = config.O_DATA.format("/QyJobIndustries")
+    Qualification = config.O_DATA.format("/QyQualificationCodes")
+    ProfessionalBodies = config.O_DATA.format("/QyProfessionalBodies")
+    Study = config.O_DATA.format("/QyFieldsOfStudy")
+    Access_Point = config.O_DATA.format("/QyApplicants")
+    Qualifications = config.O_DATA.format("/QyApplicantAcademicQualifications")
+    Experience = config.O_DATA.format("/QyApplicantJobExperience")
+    Courses = config.O_DATA.format("/QyApplicantJobProfessionalCourses")
+    Memberships = config.O_DATA.format("/QyApplicantProfessionalMemberships")
+    Hobbies = config.O_DATA.format("/QyApplicantHobbies")
+    Referees = config.O_DATA.format("/QyApplicantReferees")
+    res = ""
+    My_Qualifications = []
+    My_Experience = []
+    My_Course = []
+    My_Membership = []
+    My_Hobby = []
+    My_Referees = []
+    try:
+        response = session.get(citizenship, timeout=10).json()
+        county_res = session.get(countyCode, timeout=10).json()
+        industry_res = session.get(industry, timeout=10).json()
+        Qualification_res = session.get(Qualification, timeout=10).json()
+        ProfessionalBodies_res = session.get(
+            ProfessionalBodies, timeout=10).json()
+
+        Study_res = session.get(Study, timeout=10).json()
+        App_response = session.get(Access_Point, timeout=10).json()
+        Qualifications_res = session.get(Qualifications, timeout=10).json()
+        Experience_res = session.get(Experience, timeout=10).json()
+        Courses_res = session.get(Courses, timeout=10).json()
+        Memberships_res = session.get(Memberships, timeout=10).json()
+        Hobbies_res = session.get(Hobbies, timeout=10).json()
+        Referees_Res = session.get(Referees, timeout=10).json()
+
+        for applicant in App_response['value']:
+            if applicant['No_'] == request.session['No_']:
+                fullname = applicant['First_Name'] + \
+                    " " + applicant['Last_Name']
+
+                request.session['username'] = fullname
+                username = request.session['username']
+                res = applicant
+        for Qualifications in Qualifications_res['value']:
+            if Qualifications['Applicant_No_'] == request.session['No_']:
+                output_json = json.dumps(Qualifications)
+                My_Qualifications.append(json.loads(output_json))
+        for Experience in Experience_res['value']:
+            if Experience['Applicant_No_'] == request.session['No_']:
+                output_json = json.dumps(Experience)
+                My_Experience.append(json.loads(output_json))
+        for course in Courses_res['value']:
+            if course['Applicant_No_'] == request.session['No_']:
+                output_json = json.dumps(course)
+                My_Course.append(json.loads(output_json))
+        for membership in Memberships_res['value']:
+            if membership['Applicant_No_'] == request.session['No_']:
+                output_json = json.dumps(membership)
+                My_Membership.append(json.loads(output_json))
+        for hobby in Hobbies_res['value']:
+            if hobby['No_'] == request.session['No_']:
+                output_json = json.dumps(hobby)
+                My_Hobby.append(json.loads(output_json))
+        for ref in Referees_Res['value']:
+            if ref['No'] == request.session['No_']:
+                output_json = json.dumps(ref)
+                My_Referees.append(json.loads(output_json))
+        country = response['value']
+        county = county_res['value']
+        ind = industry_res['value']
+        Quo = Qualification_res['value']
+        Pro = ProfessionalBodies_res['value']
+        FStudy = Study_res['value']
+    except requests.exceptions.ConnectionError as e:
+        print(e)
+
+    if request.session['username']:
+        my_name = request.session['username']
+    else:
+        my_name = "John Doe"
+    todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
+    ctx = {"year": year, "country": country,
+           "county": county, "industry": ind,
+           "Quo": Quo, "Pro": Pro,
+           "Study": FStudy, "applicant": res,
+           "fullname": fullname, "Qualify": My_Qualifications,
+           "experience": My_Experience, "course": My_Course,
+           "membership": My_Membership, "hobby": My_Hobby,
+           "Referee": My_Referees, "today": todays_date,
+           "my_name": my_name}
+
+    return render(request, 'profile.html', ctx)
 
 
 def login_request(request):
@@ -27,23 +125,32 @@ def login_request(request):
     session.auth = config.AUTHS
 
     Access_Point = config.O_DATA.format("/QyApplicants")
-
+    username = ''
+    Portal_Password = ""
     if request.method == 'POST':
 
         try:
             email = request.POST.get('email').strip()
-            password = str(request.POST.get('password')).strip()
+            password = request.POST.get('password')
         except ValueError:
-            print("Invalid credentials, try again")
+            messages.error(request, "Invalid credentials, try again")
             return redirect('login')
         try:
             response = session.get(Access_Point, timeout=10).json()
             for applicant in response['value']:
                 if applicant['E_Mail'] == email:
-                    res = applicant
+                    Portal_Password = base64.urlsafe_b64decode(
+                        applicant['Portal_Password'])
+                    request.session['No_'] = applicant['No_']
+                    applicant_no = request.session['No_']
+                    # username = applicant['First_Name'] + \
+                    #     " " + applicant['Last_Name']
+                    # request.session['username'] = username
+                    # username = request.session['username']
+
         except requests.exceptions.ConnectionError as e:
             print(e)
-        Portal_Password = base64.urlsafe_b64decode(res['Portal_Password'])
+
         cipher_suite = Fernet(config.ENCRYPT_KEY)
         decoded_text = cipher_suite.decrypt(Portal_Password).decode("ascii")
         if decoded_text == password:
@@ -52,7 +159,7 @@ def login_request(request):
             messages.error(
                 request, "Invalid Credentials")
             return redirect('login')
-    ctx = {"year": year}
+    ctx = {"year": year, "username": username}
     return render(request, 'login.html', ctx)
 
 
@@ -62,16 +169,15 @@ def register_request(request):
     email = ''
     password = ''
     confirm_password = ''
-    regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
     if request.method == 'POST':
         try:
             email = request.POST.get('email').strip()
-            my_password = str(request.POST.get('password')).strip()
+            my_password = str(request.POST.get('password'))
             confirm_password = str(
                 request.POST.get('confirm_password')).strip()
         except ValueError:
-            print("Invalid credentials, try again")
+            messages.error(request, "Invalid credentials, try again")
             return redirect('register')
         if len(my_password) < 6:
             messages.error(request, "Password should be at least 6 characters")
@@ -96,3 +202,284 @@ def register_request(request):
             print(e)
     ctx = {"year": year}
     return render(request, "register.html", ctx)
+
+
+def FnApplicantDetails(request):
+    applicantNo = request.session['No_']
+    firstName = ""
+    middleName = ""
+    lastName = ""
+    idNumber = ""
+    genders = ""
+    citizenship = ""
+    countyCode = ""
+    maritalStatus = ""
+    ethnicOrigin = ""
+    disabled = ""
+    dob = ""
+    phoneNumber = ""
+    postalAddress = ""
+    postalCode = ""
+    residentialAddress = ""
+    if request.method == 'POST':
+        try:
+            firstName = request.POST.get('firstName')
+            middleName = request.POST.get('middleName')
+            lastName = request.POST.get('lastName')
+            idNumber = request.POST.get('idNumber')
+            genders = request.POST.get('gender')
+            citizenship = request.POST.get('citizenship')
+            countyCode = request.POST.get('countyCode')
+            maritalStatus = int(request.POST.get('maritalStatus'))
+            ethnicOrigin = int(request.POST.get('ethnicOrigin'))
+            disabled = int(request.POST.get('disabled'))
+            dob = request.POST.get('dob')
+            phoneNumber = request.POST.get('phoneNumber')
+            postalAddress = request.POST.get('postalAddress')
+            postalCode = request.POST.get('postalCode')
+            residentialAddress = request.POST.get('residentialAddress')
+        except ValueError:
+            messages.error(request, "Not sent. Invalid Input, Try Again!!")
+            return redirect('profile')
+    if not countyCode:
+        countyCode = " "
+
+    class Data(enum.Enum):
+        values = genders
+    gender = (Data.values).value
+    try:
+        response = config.CLIENT.service.FnApplicantDetails(applicantNo, firstName, middleName, lastName, idNumber, gender, citizenship,
+                                                            countyCode, maritalStatus, ethnicOrigin, disabled, dob, phoneNumber, postalAddress, postalCode, residentialAddress)
+        print(response)
+        messages.success(request, "Successfully Added.")
+        return redirect('profile')
+    except Exception as e:
+        messages.error(request, e)
+        print(e)
+    return redirect('profile')
+
+
+def JobExperience(request):
+    applicantNo = request.session['No_']
+    lineNo = 0
+    startDate = ""
+    endDate = ""
+    employer = ""
+    industry = ""
+    hierarchyLevels = ""
+    functionalArea = ""
+    jobTitle = ""
+    isPresentEmployment = ""
+    country = ""
+    description = ""
+    location = ""
+    employerEmail = ""
+    employerPostalAddress = ""
+    myAction = "insert"
+
+    if request.method == 'POST':
+        try:
+            startDate = request.POST.get('startDate')
+            endDate = request.POST.get('endDate')
+            employer = request.POST.get('employer')
+            industry = request.POST.get('industry')
+            hierarchyLevels = request.POST.get('hierarchyLevel')
+            functionalArea = request.POST.get('functionalArea')
+            jobTitle = request.POST.get('jobTitle')
+            isPresentEmployment = request.POST.get('isPresentEmployment')
+            country = request.POST.get('country')
+            description = request.POST.get('description')
+            location = request.POST.get('location')
+            employerEmail = request.POST.get('employerEmail')
+            employerPostalAddress = request.POST.get('employerPostalAddress')
+        except ValueError:
+            messages.error(request, "Not sent. Invalid Input, Try Again!!")
+            return redirect('profile')
+
+    class Data(enum.Enum):
+        values = hierarchyLevels
+
+    hierarchyLevel = (Data.values).value
+    try:
+        response = config.CLIENT.service.FnApplicantJobExperience(applicantNo, lineNo, startDate, endDate, employer, industry, hierarchyLevel, functionalArea, jobTitle,
+                                                                  isPresentEmployment, country, description, location, employerEmail, employerPostalAddress, myAction)
+        print(response)
+        messages.success(request, "Successfully Added.")
+        return redirect('profile')
+    except Exception as e:
+        messages.error(request, e)
+        print(e)
+    return redirect('profile')
+
+
+def FnApplicantProfessionalCourse(request):
+    applicantNo = request.session['No_']
+    lineNo = 0
+    qualificationCode = ""
+    sectionLevel = ""
+
+    myAction = "insert"
+    if request.method == 'POST':
+        try:
+            qualificationCode = request.POST.get('qualificationCode')
+            sectionLevel = int(request.POST.get('sectionLevel'))
+
+        except ValueError:
+            messages.error(request, "Not sent. Invalid Input, Try Again!!")
+            return redirect('profile')
+
+    try:
+        response = config.CLIENT.service.FnApplicantProfessionalCourse(
+            applicantNo, lineNo, qualificationCode, sectionLevel, myAction)
+        print(response)
+        messages.success(request, "Successfully Added.")
+        return redirect('profile')
+    except Exception as e:
+        messages.error(request, e)
+        print(e)
+    return redirect('profile')
+
+
+def FnApplicantAcademicQualification(request):
+    applicantNo = request.session['No_']
+    lineNo = 0
+    startDate = ""
+    endDate = ""
+    educationTypes = ""
+    educationLevels = ""
+    fieldOfStudy = ""
+    qualificationCode = ""
+    institutionName = ""
+    proficiencyLevels = ""
+    country = ""
+    region = ""
+    isHighestLevel = ""
+    description = ""
+    grade = ""
+    myAction = "insert"
+    if request.method == 'POST':
+        try:
+            startDate = request.POST.get('startDate')
+            endDate = request.POST.get('endDate')
+            educationTypes = request.POST.get('educationType')
+            educationLevels = request.POST.get('educationLevel')
+            fieldOfStudy = request.POST.get('fieldOfStudy')
+            qualificationCode = request.POST.get('qualificationCode')
+            institutionName = request.POST.get('institutionName')
+            proficiencyLevels = request.POST.get('proficiencyLevel')
+            country = request.POST.get('country')
+            region = request.POST.get('region')
+            isHighestLevel = request.POST.get('isHighestLevel')
+            description = request.POST.get('description')
+            grade = request.POST.get('grade')
+        except ValueError:
+            messages.error(request, "Not sent. Invalid Input, Try Again!!")
+            return redirect('profile')
+
+    class Data(enum.Enum):
+        values = educationTypes
+        education = educationLevels
+        proficiency = proficiencyLevels
+
+    educationType = (Data.values).value
+    educationLevel = (Data.education).value
+    proficiencyLevel = (Data.proficiency).value
+
+    try:
+        response = config.CLIENT.service.FnApplicantAcademicQualification(applicantNo, lineNo, startDate, endDate, educationType, educationLevel, fieldOfStudy, qualificationCode, institutionName,
+                                                                          proficiencyLevel, country, region, isHighestLevel, description, grade, myAction)
+        print(response)
+        messages.success(request, "Successfully Added.")
+        return redirect('profile')
+    except Exception as e:
+        messages.error(request, e)
+        print(e)
+    return redirect('profile')
+
+
+def FnApplicantProfessionalMembership(request):
+    applicantNo = request.session['No_']
+    lineNo = 0
+    professionalBody = ""
+    membershipNo = ""
+    myAction = "insert"
+    if request.method == 'POST':
+        try:
+            professionalBody = request.POST.get('professionalBody')
+            membershipNo = request.POST.get('membershipNo')
+
+        except ValueError:
+            messages.error(request, "Not sent. Invalid Input, Try Again!!")
+            return redirect('profile')
+
+    try:
+        response = config.CLIENT.service.FnApplicantProfessionalMembership(
+            applicantNo, lineNo, professionalBody, membershipNo, myAction)
+        print(response)
+        messages.success(request, "Successfully Added.")
+        return redirect('profile')
+    except Exception as e:
+        messages.error(request, e)
+        print(e)
+    return redirect('profile')
+
+
+def FnApplicantHobby(request):
+    applicantNo = request.session['No_']
+    lineNo = 0
+    hobby = ""
+    myAction = "insert"
+    if request.method == 'POST':
+        try:
+            hobby = request.POST.get('hobby')
+
+        except ValueError:
+            messages.error(request, "Not sent. Invalid Input, Try Again!!")
+            return redirect('profile')
+
+    try:
+        response = config.CLIENT.service.FnApplicantHobby(
+            applicantNo, lineNo, hobby, myAction)
+        print(response)
+        messages.success(request, "Successfully Added.")
+        return redirect('profile')
+    except Exception as e:
+        messages.error(request, e)
+        print(e)
+    return redirect('profile')
+
+
+def FnApplicantReferee(request):
+    applicantNo = request.session['No_']
+    lineNo = 0
+    names = ""
+    company = ""
+    telephoneNo = ""
+    email = ""
+    myAction = "insert"
+    if request.method == 'POST':
+        try:
+            names = request.POST.get('names')
+            designation = request.POST.get('designation')
+            company = request.POST.get('company')
+            address = request.POST.get('address')
+            telephoneNo = request.POST.get('telephoneNo')
+            email = request.POST.get('email')
+        except ValueError:
+            messages.error(request, "Not sent. Invalid Input, Try Again!!")
+            return redirect('profile')
+
+    try:
+        response = config.CLIENT.service.FnApplicantReferee(
+            applicantNo, lineNo, names, designation, company, address, telephoneNo, email, myAction)
+        print(response)
+        messages.success(request, "Successfully Added.")
+        return redirect('profile')
+    except Exception as e:
+        messages.error(request, e)
+        print(e)
+    return redirect('profile')
+
+
+def FnApplicantJobAttachment(request):
+    return redirect('profile')

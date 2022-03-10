@@ -3,17 +3,15 @@
 {% load static %}
 {% block main %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js"
-    integrity="sha512-9Dh726RTZVE1k5R1RNEzk1ex4AoRjxNMFKtZdcWaG2KUgjEmFYN3n17YLUrbHm47CRQB1mvVBHDFXrcnx/deDA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js"></script>
 <section>
     <div class="content-wrapper general-bg" style="padding-bottom: 1rem ">
         <div class="row" id="proBanner">
             <div class="col-12">
                 <span class="d-flex align-items-center purchase-popup">
                     <img src="../../../static/img/logo/fav.png" width="70px" class="img-fluid" alt="" srcset="">
-                    <a href="" class="btn purchase-button">View Profile <i class="las la-user-circle fill-white"
-                            style="font-size:1rem;color: white;"></i></a>
+                    <a href="{% url 'profile' %}" class="btn purchase-button">My Profile <i
+                            class="las la-user-circle fill-white" style="font-size:1rem;color: white;"></i></a>
                 </span>
             </div>
         </div>
@@ -28,9 +26,17 @@
                 </div>
             </div>
         </div>
+        <div class="alert alert-success" role="alert">
+            <h4 class="alert-heading">Hello!</h4>
+            <p>Please Ensure that you have filled or updated all your profile information before applying for
+                any of our Jobs, otherwise your submission won't be successful.
+            </p>
+            <hr>
+            <p class="mb-0"><a href="{% url 'profile' %}">Click here to update profile information</a></p>
+        </div>
         <div class="row my-4">
-            <div class="col-md-3">
-                <div class="card text-white bg-primary h-100 d-card">
+            <div class="col-md-4 my-2">
+                <div class="card text-white h-100 d-card" style="background: #144a85;">
                     <div class="card-body">
                         <span>
                             <i class="las la-box-open fill-white" style="font-size:2rem;"></i>
@@ -38,13 +44,13 @@
                                 style="float: right; color:rgb(255, 255, 255);font-weight: bold;  text-shadow: 0 1px 0 #0275d8;">View
                                 <i class="las la-arrow-right"></i></a>
                         </span>
-                        <h3 class="card-title mt-3 mb-0">{{All_T}}</h3>
-                        <p class="card-text" style="text-shadow: 0 1px 0 #0275d8;">Open Tenders</p>
+                        <h3 class="card-title mt-3 mb-0">{{count}}</h3>
+                        <p class="card-text" style="text-shadow: 0 1px 0 #144a85;">Open Vacancies</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-success h-100 d-card">
+            <div class="col-md-4 my-2">
+                <div class="card text-white  h-100 d-card" style="background: black;">
                     <div class="card-body">
                         <span>
                             <i class="las la-lock fill-white" style="font-size:2rem;"></i>
@@ -52,13 +58,13 @@
                                 style="float: right; color:white;font-weight: bold;  text-shadow: 0 1px 0 #5cb85c;">View
                                 <i class="las la-arrow-right"></i></a>
                         </span>
-                        <h3 class="card-title mt-3 mb-0">{{RES}}</h3>
-                        <p class="card-text" style="text-shadow: 0 1px 0 #5cb85c;">Restricted Tenders</p>
+                        <h3 class="card-title mt-3 mb-0">{{counter}}</h3>
+                        <p class="card-text" style="text-shadow: 0 1px 0 black;">Submitted Applications</p>
                     </div>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-danger h-100 d-card">
+            <div class="col-md-4 my-2">
+                <div class="card text-white  h-100 d-card" style="background: #e51e25;">
                     <div class="card-body">
                         <span>
                             <i class="las la-briefcase fill-white" style="font-size:2rem;"></i>
@@ -66,57 +72,55 @@
                                 #d9534f;">View
                                 <i class="las la-arrow-right"></i></a>
                         </span>
-                        <h3 class="card-title mt-3 mb-0">{{RFQ}}</h3>
-                        <p class="card-text" style="text-shadow: 0 1px 0 #d9534f;">Request For Quotation</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-md-3">
-                <div class="card text-white bg-info h-100 d-card">
-                    <div class="card-body">
-                        <span>
-                            <i class="las la-edit fill-white" style="font-size:2rem;"></i>
-                            <a href=""
-                                style="float: right; color:white;font-weight: bold;  text-shadow: 0 1px 0 #9933CC;">View
-                                <i class="las la-arrow-right"></i></a>
-                        </span>
-                        <h3 class="card-title mt-3 mb-0">{{EOI}}</h3>
-                        <p class="card-text" style="text-shadow: 0 1px 0 #9933CC;">Expression Of Interest</p>
+                        <h3 class="card-title mt-3 mb-0">{{company}}</h3>
+                        <p class="card-text" style="text-shadow: 0 1px 0 #e51e25;">Company Jobs</p>
                     </div>
                 </div>
             </div>
         </div>
         <div class="row mb-2">
-            {% for res in res %}
-            <div class="col-md-4 my-2">
-                <article class="postcard red h-100 ">
-                    <div class="postcard__text">
-                        <h1 class="postcard__title">{{res.Job_Description}}</h1>
-                        <div class="postcard__subtitle small">
-                            <time datetime="2020-05-25 12:00:00">
-                                <i class="las la-clock"></i> Mon, May 25th 2020
-                            </time>
-                        </div>
-                        <div class="postcard__bar"></div>
-                        <div class="postcard__preview-txt">
-                            As a Product Designer, you will work within a Product Delivery Team fused with UX,
-                            engineering, product and data talent.
-                        </div>
-                        <ul class="postcard__tagbox">
-                            <li class="tag__item"> <i class="las la-briefcase"></i> Experience : 2 - 3 years </li>
-                            <li class="tag__item play">
-                                <a href="{% url 'jobDetail' res.Job_ID %}">View Job<i
-                                        class="las la-angle-right"></i></a>
-                            </li>
-                        </ul>
-                    </div>
-                </article>
+            <div class="card" id="home">
+                <h4 class="mt-2 card-title text-dark">Open Jobs List</h4>
+                <div class="card-body">
+                    <table id="example" class="table table-striped table-bordered dt-responsive table-responsive-lg"
+                        style="width:100%">
+                        <thead>
+                            <tr id="tops">
+                                <th id="long">Job ID</th>
+                                <th>Job Description</th>
+                                <th>Positions</th>
+                                <th>Appointment Type</th>
+                                <th>Priority</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for res in job %}
+                            <tr>
+                                <td>{{res.Job_ID}}</td>
+                                <td id="rap">{{res.Description}}</td>
+                                <td>{{res.Positions}}</td>
+                                <td>{{res.Appointment_Type}}</td>
+                                <td>{{res.Priority}}</td>
+                                <td>
+                                    <a type="button" href="{% url 'jobDetail' res.Job_ID %}"
+                                        class="btn btn-success btn-icon-text" data-toggle="tooltip" data-placement="top"
+                                        title="view" style="background: #25CC88;">View
+                                        <i class="las la-external-link-alt" style="font-size: 1rem"></i>
+                                    </a>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            {% endfor %}
         </div>
-        <div class="row mb-2">
+
+        <!-- <div class="row mb-2">
             <div id="pagination-container"></div>
-        </div>
+        </div> -->
     </div>
     </div>
 </section>
@@ -139,5 +143,6 @@
         }
     })
 </script>
+
 
 {% endblock %}

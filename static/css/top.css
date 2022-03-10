@@ -85,22 +85,22 @@ ul.breadcrumb li a:hover {
 }
 
 .l-bg-cherry {
-    background: linear-gradient(to right, #493240, #f09) !important;
+    background: #e51e25 !important;
     color: #fff;
 }
 
 .l-bg-blue-dark {
-    background: linear-gradient(to right, #373b44, #4286f4) !important;
+    background: #124887 !important;
     color: #fff;
 }
 
 .l-bg-green-dark {
-    background: linear-gradient(to right, #0a504a, #38ef7d) !important;
+    background: #134326 !important;
     color: #fff;
 }
 
 .l-bg-orange-dark {
-    background: linear-gradient(to right, #a86008, #ffba56) !important;
+    background: black !important;
     color: #fff;
 }
 
@@ -151,8 +151,6 @@ ul.breadcrumb li a:hover {
     overflow: hidden;
     position: relative;
     color: #ffffff;
-    background: #110f16;
-    outline: 1px solid rgb(199, 199, 199);
     transition: 0.3s all ease-in-out;
 }
 
@@ -321,8 +319,10 @@ ul.breadcrumb li a:hover {
 .j-data h5 {
     color: var(--first-color);
     font-family: var(--third-font);
-    text-shadow: 0 1px 0 white;
-    font-weight: bold;
+    text-shadow: 0.022em 0.022em 0.022em white;
+    font-weight: 700;
+    font-size: 1.3rem;
+    letter-spacing: 0.01em;
 }
 
 .j-data p {
@@ -335,11 +335,11 @@ ul.breadcrumb li a:hover {
     color: #222;
     font-family: var(--third-font);
     text-shadow: 0 1px 0 white;
-    list-style: none;
+    list-style-type: none;
 }
 
 .j-data li::before {
-    content: ">>";
+    content: "=>";
     padding-right: 8px;
     color: blue;
 }
