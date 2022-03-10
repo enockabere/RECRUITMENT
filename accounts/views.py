@@ -100,10 +100,8 @@ def profile_request(request):
     except requests.exceptions.ConnectionError as e:
         print(e)
 
-    if request.session['username']:
-        my_name = request.session['username']
-    else:
-        my_name = "John Doe"
+    my_name = request.session['E_Mail']
+
     todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
     ctx = {"year": year, "country": country,
            "county": county, "industry": ind,
@@ -142,12 +140,9 @@ def login_request(request):
                     Portal_Password = base64.urlsafe_b64decode(
                         applicant['Portal_Password'])
                     request.session['No_'] = applicant['No_']
+                    request.session['E_Mail'] = applicant['E_Mail']
                     applicant_no = request.session['No_']
-                    # username = applicant['First_Name'] + \
-                    #     " " + applicant['Last_Name']
-                    # request.session['username'] = username
-                    # username = request.session['username']
-
+                    mail = request.session['E_Mail']
         except requests.exceptions.ConnectionError as e:
             print(e)
 

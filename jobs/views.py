@@ -38,10 +38,9 @@ def CompanyJobs(request):
     count = len(Job)
     counter = len(Sub)
     todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
-    if request.session['username']:
-        my_name = request.session['username']
-    else:
-        my_name = "John Doe"
+
+    my_name = request.session['E_Mail']
+
     ctx = {"today": todays_date, "year": year,
            "count": count, "res": Job, "sub": Sub,
            "counter": counter, "my_name": my_name}
@@ -122,10 +121,9 @@ def JobDetail(request, pk):
                 Attachment.append(json.loads(output_json))
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if request.session['username']:
-        my_name = request.session['username']
-    else:
-        my_name = "John Doe"
+
+    my_name = request.session['E_Mail']
+
     todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
     ctx = {"today": todays_date, "res": res,
            "Qualifications": response, "experience": E_response,

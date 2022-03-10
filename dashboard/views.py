@@ -50,10 +50,8 @@ def dashboard(request):
         company = len(res)
     except requests.exceptions.ConnectionError as e:
         print(e)
-    if request.session['username']:
-        my_name = request.session['username']
-    else:
-        my_name = "John Doe"
+    my_name = request.session['E_Mail']
+
     todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
     ctx = {"today": todays_date, "year": year, "res": res,
            "count": count, "counter": counter, "company": company, "job": Job,
