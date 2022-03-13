@@ -23,15 +23,12 @@ from datetime import date
 def dashboard(request):
     session = requests.Session()
     session.auth = config.AUTHS
-
-    Access = config.O_DATA.format("/QyCompanyJobs")
     Access_Point = config.O_DATA.format("/QyRecruitmentRequests")
     submitted = config.O_DATA.format("/QyApplicantJobApplied")
     todays_date = date.today()
     year = todays_date.year
 
     try:
-        response = session.get(Access, timeout=10).json()
         responses = session.get(Access_Point, timeout=10).json()
         submitted_res = session.get(submitted, timeout=10).json()
         Job = []
@@ -44,16 +41,14 @@ def dashboard(request):
             if subs['Application_No_'] == request.session['No_']:
                 output_json = json.dumps(subs)
                 Sub.append(json.loads(output_json))
-        res = response['value']
         count = len(Job)
         counter = len(Sub)
-        company = len(res)
     except requests.exceptions.ConnectionError as e:
         print(e)
     my_name = request.session['E_Mail']
 
     todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
-    ctx = {"today": todays_date, "year": year, "res": res,
-           "count": count, "counter": counter, "company": company, "job": Job,
-           "my_name": my_name}
+    ctx = {"today": todays_date, "year": year,
+           "count": count, "counter": counter,
+           "job": Job, "my_name": my_name}
     return render(request, 'main/dashboard.html', ctx)
