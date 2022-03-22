@@ -463,6 +463,9 @@ def FnApplicantReferee(request):
         except ValueError:
             messages.error(request, "Not sent. Invalid Input, Try Again!!")
             return redirect('profile')
+        print(names)
+        print(designation)
+        print(company)
 
     try:
         response = config.CLIENT.service.FnApplicantReferee(

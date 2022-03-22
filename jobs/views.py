@@ -1,4 +1,5 @@
 from audioop import reverse
+import base64
 from django.shortcuts import render, redirect
 import requests
 from requests import Session
@@ -178,3 +179,35 @@ def FnWithdrawJobApplication(request):
         messages.error(request, e)
         print(e)
     return redirect('job')
+
+
+def UploadAttachedDocument(request, pk):
+    docNo = pk
+    response = ""
+    fileName = ""
+    attachment = ""
+    tableID = 52177788
+
+    if request.method == "POST":
+        try:
+            attach = request.FILES.getlist('attachment')
+        except Exception as e:
+            print("Not Working")
+            return redirect('jobDetail', pk=pk)
+        for files in attach:
+            fileName = request.FILES['attachment'].name
+            attachment = base64.b64encode(files.read())
+            try:
+                response = config.CLIENT.service.FnUploadAttachedDocument(
+                    docNo, fileName, attachment, tableID)
+            except Exception as e:
+                messages.error(request, e)
+                print(e)
+        if response == True:
+            messages.success(request, "Successfully Sent !!")
+            return redirect('jobDetail', pk=pk)
+        else:
+            messages.error(request, "Not Sent !!")
+            return redirect('jobDetail', pk=pk)
+
+    return redirect('jobDetail', pk=pk)

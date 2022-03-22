@@ -8,4 +8,6 @@ urlpatterns = [
          views.FnApplicantApplyJob, name='FnApplicantApplyJob'),
     path('FnWithdrawJobApplication',
          views.FnWithdrawJobApplication, name='FnWithdrawJobApplication'),
+    path('UploadAttachedDocument/<str:pk>',
+         views.UploadAttachedDocument, name='UploadAttachedDocument'),
 ]
