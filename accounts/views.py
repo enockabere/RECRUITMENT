@@ -137,17 +137,26 @@ def login_request(request):
             response = session.get(Access_Point, timeout=10).json()
             for applicant in response['value']:
                 if applicant['E_Mail'] == email:
-                    Portal_Password = base64.urlsafe_b64decode(
-                        applicant['Portal_Password'])
-                    request.session['No_'] = applicant['No_']
-                    request.session['E_Mail'] = applicant['E_Mail']
-                    applicant_no = request.session['No_']
-                    mail = request.session['E_Mail']
+                    try:
+                        Portal_Password = base64.urlsafe_b64decode(
+                            applicant['Portal_Password'])
+                        request.session['No_'] = applicant['No_']
+                        request.session['E_Mail'] = applicant['E_Mail']
+                        applicant_no = request.session['No_']
+                        mail = request.session['E_Mail']
+                    except Exception as e:
+                        messages.error(request, e)
+                        return redirect('login')
         except requests.exceptions.ConnectionError as e:
             print(e)
 
         cipher_suite = Fernet(config.ENCRYPT_KEY)
-        decoded_text = cipher_suite.decrypt(Portal_Password).decode("ascii")
+        try:
+            decoded_text = cipher_suite.decrypt(
+                Portal_Password).decode("ascii")
+        except Exception as e:
+            messages.error(request, e)
+            return redirect('login')
         if decoded_text == password:
             return redirect('dashboard')
         else:
