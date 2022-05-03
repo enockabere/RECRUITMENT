@@ -321,26 +321,25 @@ def FnApplicantProfessionalCourse(request):
     lineNo = 0
     qualificationCode = ""
     sectionLevel = ""
-
     myAction = "insert"
+    otherQualification = ''
     if request.method == 'POST':
         try:
             qualificationCode = request.POST.get('qualificationCode')
             sectionLevel = int(request.POST.get('sectionLevel'))
-
+            otherQualification = request.POST.get('otherQualification')
         except ValueError:
             messages.error(request, "Not sent. Invalid Input, Try Again!!")
             return redirect('profile')
-
-    try:
-        response = config.CLIENT.service.FnApplicantProfessionalCourse(
-            applicantNo, lineNo, qualificationCode, sectionLevel, myAction)
-        print(response)
-        messages.success(request, "Successfully Added.")
-        return redirect('profile')
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
+        try:
+            response = config.CLIENT.service.FnApplicantProfessionalCourse(
+                applicantNo, lineNo, qualificationCode, sectionLevel, myAction, otherQualification)
+            print(response)
+            messages.success(request, "Successfully Added.")
+            return redirect('profile')
+        except Exception as e:
+            messages.error(request, e)
+            print(e)
     return redirect('profile')
 
 
@@ -361,6 +360,7 @@ def FnApplicantAcademicQualification(request):
     description = ""
     grade = ""
     myAction = "insert"
+    otherQualification = ""
     if request.method == 'POST':
         try:
             startDate = request.POST.get('startDate')
@@ -376,28 +376,29 @@ def FnApplicantAcademicQualification(request):
             isHighestLevel = request.POST.get('isHighestLevel')
             description = request.POST.get('description')
             grade = request.POST.get('grade')
+            otherQualification = request.POST.get('otherQualification')
         except ValueError:
             messages.error(request, "Not sent. Invalid Input, Try Again!!")
             return redirect('profile')
 
-    class Data(enum.Enum):
-        values = educationTypes
-        education = educationLevels
-        proficiency = proficiencyLevels
+        class Data(enum.Enum):
+            values = educationTypes
+            education = educationLevels
+            proficiency = proficiencyLevels
 
-    educationType = (Data.values).value
-    educationLevel = (Data.education).value
-    proficiencyLevel = (Data.proficiency).value
+        educationType = (Data.values).value
+        educationLevel = (Data.education).value
+        proficiencyLevel = (Data.proficiency).value
 
-    try:
-        response = config.CLIENT.service.FnApplicantAcademicQualification(applicantNo, lineNo, startDate, endDate, educationType, educationLevel, fieldOfStudy, qualificationCode, institutionName,
-                                                                          proficiencyLevel, country, region, isHighestLevel, description, grade, myAction)
-        print(response)
-        messages.success(request, "Successfully Added.")
-        return redirect('profile')
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
+        try:
+            response = config.CLIENT.service.FnApplicantAcademicQualification(applicantNo, lineNo, startDate, endDate, educationType, educationLevel, fieldOfStudy, qualificationCode, institutionName,
+                                                                              proficiencyLevel, country, region, isHighestLevel, description, grade, myAction, otherQualification)
+            print(response)
+            messages.success(request, "Successfully Added.")
+            return redirect('profile')
+        except Exception as e:
+            messages.error(request, e)
+            print(e)
     return redirect('profile')
 
 
@@ -407,24 +408,25 @@ def FnApplicantProfessionalMembership(request):
     professionalBody = ""
     membershipNo = ""
     myAction = "insert"
+    otherProfessionalBody = ''
     if request.method == 'POST':
         try:
             professionalBody = request.POST.get('professionalBody')
             membershipNo = request.POST.get('membershipNo')
-
+            otherProfessionalBody = request.POST.get('otherProfessionalBody')
         except ValueError:
             messages.error(request, "Not sent. Invalid Input, Try Again!!")
             return redirect('profile')
 
-    try:
-        response = config.CLIENT.service.FnApplicantProfessionalMembership(
-            applicantNo, lineNo, professionalBody, membershipNo, myAction)
-        print(response)
-        messages.success(request, "Successfully Added.")
-        return redirect('profile')
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
+        try:
+            response = config.CLIENT.service.FnApplicantProfessionalMembership(
+                applicantNo, lineNo, professionalBody, membershipNo, myAction, otherProfessionalBody)
+            print(response)
+            messages.success(request, "Successfully Added.")
+            return redirect('profile')
+        except Exception as e:
+            messages.error(request, e)
+            print(e)
     return redirect('profile')
 
 

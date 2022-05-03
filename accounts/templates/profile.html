@@ -17,29 +17,7 @@
                     </button>
                 </div>
             </div>
-        </div>
-        <!--alert -->
-        {% if messages %}
-        {% for message in messages %}
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-        <div class="alert alert-success d-flex align-items-center alert-dismissible alert-success" role="alert">
-            <i class="las la-check-double" style="color: white;font-size: 2rem"></i>
-            <div class="a-icon mx-2">
-                {{message}}
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-        <div class="alert alert-danger d-flex align-items-center alert-dismissible alert-warn" role="alert">
-            <i class="las la-exclamation-triangle" style="color: white;font-size: 2rem"></i>
-            <div class="a-icon mx-2">
-                {{message}}
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-        {% endfor %}
-        {% endif %}
+        </div>}
         <div class="row">
             <div class="col-md-12">
                 <div class="my-3">
@@ -165,8 +143,7 @@
                                                                         style="color: white;font-size: 2rem"></i>
                                                                     <div class="a-icon mx-2">
                                                                         <p style="color: white;">Please Fill Your
-                                                                            Personal Information on
-                                                                            Profile Settings Tab!</p>
+                                                                            Personal Information </p>
                                                                     </div>
                                                                     <button type="button" class="btn-close"
                                                                         data-bs-dismiss="alert"
@@ -191,21 +168,22 @@
                                                                 <div class="accordion" id="accordionExample">
                                                                     <div class="item">
                                                                         <div class="item-header"
-                                                                            id="Qualify{{res.Line_No}}">
+                                                                            id="Qualify{{res.Line_No_}}">
                                                                             <h2 class="mb-0">
                                                                                 <button class="btn btn-link"
                                                                                     type="button" data-toggle="collapse"
-                                                                                    data-target="#collapsed{{res.Line_No}}"
+                                                                                    data-target="#collapsed{{res.Line_No_}}"
                                                                                     aria-expanded="true"
-                                                                                    aria-controls="collapsed{{res.Line_No}}">
+                                                                                    aria-controls="collapsed{{res.Line_No_}}">
                                                                                     {{res.Institution_Name}}
+
                                                                                     <i class="fa fa-angle-down"></i>
                                                                                 </button>
                                                                             </h2>
                                                                         </div>
-                                                                        <div id="collapsed{{res.Line_No}}"
+                                                                        <div id="collapsed{{res.Line_No_}}"
                                                                             class="collapse"
-                                                                            aria-labelledby="Qualify{{res.Line_No}}"
+                                                                            aria-labelledby="Qualify{{res.Line_No_}}"
                                                                             data-parent="#accordionExample">
                                                                             <div class="t-p">
                                                                                 <form class="row g-3">
@@ -261,28 +239,6 @@
                                                                                             placeholder="{{res.Highest_Level}}"
                                                                                             readonly>
                                                                                     </div>
-                                                                                    <div class="col-md-6">
-                                                                                        <label class="form-label">Field
-                                                                                            of Study</label>
-                                                                                        <input type="text"
-                                                                                            class="form-control"
-                                                                                            placeholder="{{res.Field_of_Study}}"
-                                                                                            readonly>
-                                                                                    </div>
-                                                                                    <div class="col-md-6">
-                                                                                        <label
-                                                                                            class="form-label">Country</label>
-                                                                                        <input type="text"
-                                                                                            class="form-control"
-                                                                                            placeholder="{{res.Country}}"
-                                                                                            readonly>
-                                                                                    </div>
-                                                                                    <div
-                                                                                        class="d-grid gap-2 d-md-block">
-                                                                                        <button class="btn btn-danger"
-                                                                                            type="button">Delete <i
-                                                                                                class="las la-trash"></i></button>
-                                                                                    </div>
                                                                                 </form>
                                                                             </div>
                                                                         </div>
@@ -297,8 +253,7 @@
                                                                     <div class="a-icon mx-2">
                                                                         <p style="color: white;">Please Fill Your
                                                                             Academic
-                                                                            Qualifications on
-                                                                            Profile Settings Tab!</p>
+                                                                            Qualifications</p>
                                                                     </div>
                                                                     <button type="button" class="btn-close"
                                                                         data-bs-dismiss="alert"
@@ -347,14 +302,6 @@
                                                                                         <input type="text"
                                                                                             class="form-control"
                                                                                             placeholder="{{res.Employer}}"
-                                                                                            readonly>
-                                                                                    </div>
-                                                                                    <div class="col-md-6">
-                                                                                        <label
-                                                                                            class="form-label">Industry</label>
-                                                                                        <input type="text"
-                                                                                            class="form-control"
-                                                                                            placeholder="{{res.Industry}}"
                                                                                             readonly>
                                                                                     </div>
                                                                                     <div class="col-md-6">
@@ -449,12 +396,7 @@
                                                                                             placeholder="{{res.Description}}"
                                                                                             readonly></textarea>
                                                                                     </div>
-                                                                                    <div
-                                                                                        class="d-grid gap-2 d-md-block">
-                                                                                        <button class="btn btn-danger"
-                                                                                            type="button">Delete <i
-                                                                                                class="las la-trash"></i></button>
-                                                                                    </div>
+
                                                                                 </form>
                                                                             </div>
                                                                         </div>
@@ -468,8 +410,7 @@
                                                                         style="color: white;font-size: 2rem"></i>
                                                                     <div class="a-icon mx-2">
                                                                         <p style="color: white;">Please Fill Your
-                                                                            Experience information on
-                                                                            Profile Settings Tab!</p>
+                                                                            Experience information</p>
                                                                     </div>
                                                                     <button type="button" class="btn-close"
                                                                         data-bs-dismiss="alert"
@@ -494,20 +435,20 @@
                                                                 <div class="accordion" id="accordionExample">
                                                                     <div class="item">
                                                                         <div class="item-header"
-                                                                            id="course{{res.Line_No}}">
+                                                                            id="course{{res.Line_No_}}">
                                                                             <h2 class="mb-0">
                                                                                 <button class="btn btn-link"
                                                                                     type="button" data-toggle="collapse"
-                                                                                    data-target="#coll{{res.Line_No}}"
+                                                                                    data-target="#coll{{res.Line_No_}}"
                                                                                     aria-expanded="true"
-                                                                                    aria-controls="coll{{res.Line_No}}">
+                                                                                    aria-controls="coll{{res.Line_No_}}">
                                                                                     {{res.Qualification_Code}}
                                                                                     <i class="fa fa-angle-down"></i>
                                                                                 </button>
                                                                             </h2>
                                                                         </div>
-                                                                        <div id="coll{{res.Line_No}}" class="collapse"
-                                                                            aria-labelledby="course{{res.Line_No}}"
+                                                                        <div id="coll{{res.Line_No_}}" class="collapse"
+                                                                            aria-labelledby="course{{res.Line_No_}}"
                                                                             data-parent="#accordionExample">
                                                                             <div class="t-p">
                                                                                 <form class="row g-3">
@@ -529,12 +470,7 @@
                                                                                             placeholder="{{res.Section_Level}}"
                                                                                             readonly>
                                                                                     </div>
-                                                                                    <div
-                                                                                        class="d-grid gap-2 d-md-block">
-                                                                                        <button class="btn btn-danger"
-                                                                                            type="button">Delete <i
-                                                                                                class="las la-trash"></i></button>
-                                                                                    </div>
+
                                                                                 </form>
                                                                             </div>
                                                                         </div>
@@ -548,8 +484,7 @@
                                                                         style="color: white;font-size: 2rem"></i>
                                                                     <div class="a-icon mx-2">
                                                                         <p style="color: white;">Please Fill Your
-                                                                            Professional Courses information on
-                                                                            Profile Settings Tab!</p>
+                                                                            Professional Courses information</p>
                                                                     </div>
                                                                     <button type="button" class="btn-close"
                                                                         data-bs-dismiss="alert"
@@ -574,21 +509,21 @@
                                                                 <div class="accordion" id="accordionExample">
                                                                     <div class="item">
                                                                         <div class="item-header"
-                                                                            id="pro{{res.Line_No}}">
+                                                                            id="pro{{res.Line_No_}}">
                                                                             <h2 class="mb-0">
                                                                                 <button class="btn btn-link"
                                                                                     type="button" data-toggle="collapse"
-                                                                                    data-target="#collpro{{res.Line_No}}"
+                                                                                    data-target="#collpro{{res.Line_No_}}"
                                                                                     aria-expanded="true"
-                                                                                    aria-controls="collpro{{res.Line_No}}">
+                                                                                    aria-controls="collpro{{res.Line_No_}}">
                                                                                     {{res.Professional_Body}}
                                                                                     <i class="fa fa-angle-down"></i>
                                                                                 </button>
                                                                             </h2>
                                                                         </div>
-                                                                        <div id="collpro{{res.Line_No}}"
+                                                                        <div id="collpro{{res.Line_No_}}"
                                                                             class="collapse"
-                                                                            aria-labelledby="pro{{res.Line_No}}"
+                                                                            aria-labelledby="pro{{res.Line_No_}}"
                                                                             data-parent="#accordionExample">
                                                                             <div class="t-p">
                                                                                 <form class="row g-3">
@@ -610,13 +545,7 @@
                                                                                             placeholder="{{res.MembershipNo}}"
                                                                                             readonly>
                                                                                     </div>
-                                                                                    <div
-                                                                                        class="d-grid gap-2 d-md-block">
-                                                                                        <button class="btn btn-danger"
-                                                                                            type="button">Delete <i
-                                                                                                class="las la-trash"></i></button>
 
-                                                                                    </div>
                                                                                 </form>
                                                                             </div>
                                                                         </div>
@@ -630,8 +559,7 @@
                                                                         style="color: white;font-size: 2rem"></i>
                                                                     <div class="a-icon mx-2">
                                                                         <p style="color: white;">Please Fill Your
-                                                                            Professional Memberships information on
-                                                                            Profile Settings Tab!</p>
+                                                                            Professional Memberships information </p>
                                                                     </div>
                                                                     <button type="button" class="btn-close"
                                                                         data-bs-dismiss="alert"
@@ -681,14 +609,6 @@
                                                                                             placeholder="{{res.Hobbies}}"
                                                                                             readonly>
                                                                                     </div>
-
-                                                                                    <div
-                                                                                        class="d-grid gap-2 d-md-block">
-                                                                                        <button class="btn btn-danger"
-                                                                                            type="button">Delete <i
-                                                                                                class="las la-trash"></i></button>
-
-                                                                                    </div>
                                                                                 </form>
                                                                             </div>
                                                                         </div>
@@ -702,8 +622,7 @@
                                                                         style="color: white;font-size: 2rem"></i>
                                                                     <div class="a-icon mx-2">
                                                                         <p style="color: white;">Please add Your
-                                                                            Hobbies on
-                                                                            Profile Settings Tab!</p>
+                                                                            Hobbies</p>
                                                                     </div>
                                                                     <button type="button" class="btn-close"
                                                                         data-bs-dismiss="alert"
@@ -793,13 +712,6 @@
                                                                                             placeholder="{{res.E_Mail}}"
                                                                                             readonly>
                                                                                     </div>
-                                                                                    <div
-                                                                                        class="d-grid gap-2 d-md-block">
-                                                                                        <button class="btn btn-danger"
-                                                                                            type="button">Delete <i
-                                                                                                class="las la-trash"></i></button>
-
-                                                                                    </div>
                                                                                 </form>
                                                                             </div>
                                                                         </div>
@@ -813,8 +725,7 @@
                                                                         style="color: white;font-size: 2rem"></i>
                                                                     <div class="a-icon mx-2">
                                                                         <p style="color: white;">Please add Your
-                                                                            Referees on
-                                                                            Profile Settings Tab!</p>
+                                                                            Referees </p>
                                                                     </div>
                                                                     <button type="button" class="btn-close"
                                                                         data-bs-dismiss="alert"
@@ -1030,27 +941,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'FnApplicantAcademicQualification' %}" method="post" class="needs-validation"
-                    novalidate>
+                <form method="post" id="AcademicForm">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Start Date</label>
-                            <input type="date" name="startDate" id="startDate" class="form-control" required>
-                            <div class="invalid-feedback">
-                                Please select a valid Start Date.
-                            </div>
+                            <input type="date" name="startDate" id="Aca_startDate" class="form-control" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">End Date</label>
-                            <input type="date" name="endDate" id="endDate" class="form-control" required>
-                            <div class="invalid-feedback">
-                                Please select a valid End Date.
-                            </div>
+                            <input type="date" name="endDate" id="Aca_endDate" class="form-control" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Education Type</label>
-                            <select class="form-select" name="educationType" id="educationType" required>
+                            <select class="form-select" name="educationType" id="Aca_educationType" required>
                                 <option selected value="0">Choose...</option>
                                 <option value="1">Primary</option>
                                 <option value="2">High School</option>
@@ -1059,15 +963,12 @@
                                 <option value="5">Professional</option>
                                 <option value="6">Vocational</option>
                             </select>
-                            <div class="invalid-feedback">
-                                Select Your Education Type.
-                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Education Level</label>
-                            <select class="form-select" name="educationLevel" required>
+                            <select class="form-select" name="educationLevel" id="Aca_educationLevel" required>
                                 <option selected value="0">Choose...</option>
                                 <option value="1">Certificate</option>
                                 <option value="2">Diploma</option>
@@ -1076,46 +977,37 @@
                                 <option value="5">Masters Degree</option>
                                 <option value="6">Doctorate</option>
                             </select>
-                            <div class="invalid-feedback">
-                                Select Your Education Level.
-                            </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Field Of Study</label>
-                            <select class="form-select" name="fieldOfStudy" required>
+                            <select class="form-select" name="fieldOfStudy" id="Aca_fieldOfStudy" required>
                                 <option selected disabled value="">Choose...</option>
                                 {% for res in Study %}
                                 <option value="{{res.Code}}">{{res.Description}}</option>
                                 {% endfor %}
                             </select>
-                            <div class="invalid-feedback">
-                                Select Your Field Of Study
-                            </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Qualification</label>
-                            <select class="form-select" name="qualificationCode" required>
+                            <select class="form-select" name="qualificationCode" id="AcademicQualificationCode"
+                                required>
                                 <option selected disabled value="">Choose...</option>
                                 {% for res in Quo %}
                                 <option value="{{res.Code}}">{{res.Description}}</option>
                                 {% endfor %}
+                                <option value="Other">OTHER QUALIFICATION</option>
                             </select>
-                            <div class="invalid-feedback">
-                                Select Your Qualification.
-                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Institution Name</label>
-                            <input type="text" class="form-control" name="institutionName" required>
-                            <div class="invalid-feedback">
-                                Enter Your Institution Name.
-                            </div>
+                            <input type="text" class="form-control" name="institutionName" id="Aca_institutionName"
+                                required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Proficiency Level</label>
-                            <select class="form-select" name="proficiencyLevel" required>
+                            <select class="form-select" name="proficiencyLevel" id="Aca_proficiencyLevel" required>
                                 <option selected disabled value="">Choose...</option>
                                 <option value="1">Not Rated</option>
                                 <option value="2">First Class</option>
@@ -1128,61 +1020,54 @@
                                 <option value="9">MBA</option>
                                 <option value="10">PhD</option>
                             </select>
-                            <div class="invalid-feedback">
-                                Select Proficiency Level.
-                            </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Country</label>
-                            <select class="form-select" name="country" required>
+                            <select class="form-select" name="country" id="Aca_country" required>
                                 <option selected disabled value="">Choose...</option>
                                 {% for res in country %}
                                 <option value="{{res.Code}}">{{res.Name}}</option>
                                 {% endfor %}
                             </select>
-                            <div class="invalid-feedback">
-                                Select Country.
-                            </div>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Region</label>
-                            <input type="text" class="form-control" name="region" required>
-                            <div class="invalid-feedback">
-                                Enter Your Region.
-                            </div>
+                            <input type="text" class="form-control" name="region" id="Aca_region" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Highest Level</label>
-                            <select class="form-select" name="isHighestLevel" required>
+                            <select class="form-select" name="isHighestLevel" id="isHighestLevel" required>
                                 <option selected disabled value="">Choose...</option>
                                 <option value="False">No</option>
                                 <option value="True">Yes</option>
                             </select>
-                            <div class="invalid-feedback">
-                                Select a Valid Option.
-                            </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Grade</label>
-                            <input type="text" class="form-control" name="grade">
-                            <div class="invalid-feedback">
-                                Enter Your Grade.
-                            </div>
+                            <input type="text" class="form-control" name="grade" id="Aca_grade">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Other Qualification</label>
+                            <textarea class="form-control" name="otherQualification" id="otherAcademic" rows="3"
+                                disabled></textarea>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <label class="form-label">Description</label>
-                            <textarea class="form-control" name="description" rows="3"></textarea>
+                            <textarea class="form-control" name="description" id="Aca_description" rows="3"></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary my-3">Submit</button>
+                    <p id="output" class="my-3" style="color:#e51e25;font-weight: bolder;"></p>
+                    <button type="submit" class="btn btn-primary my-3">Add</button>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'profile' %}" type="button" class="btn btn-success">Finish</a>
             </div>
         </div>
     </div>
@@ -1199,48 +1084,35 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'JobExperience' %}" method="POST" id="JobExperience" class="needs-validation"
-                    novalidate>
+                <form method="POST" id="JobExperienceForm">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Start Date</label>
-                            <input type="date" name="startDate" id="startDate" class="form-control" required>
-                            <div class="invalid-feedback">
-                                Please select a valid Start Date.
-                            </div>
+                            <input type="date" name="startDate" id="job_startDate" class="form-control" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">End Date</label>
-                            <input type="date" name="endDate" id="endDate" class="form-control" required>
-                            <div class="invalid-feedback">
-                                Please select a valid End Date.
-                            </div>
+                            <input type="date" name="endDate" id="job_endDate" class="form-control" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Employer</label>
-                            <input type="text" class="form-control" name="employer" id="employer" required>
-                            <div class="invalid-feedback">
-                                Enter Employer.
-                            </div>
+                            <input type="text" class="form-control" name="employer" id="job_employer" required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Industry</label>
-                            <select class="form-select" name="industry" id="industry" required>
+                            <select class="form-select" name="industry" id="job_industry" required>
                                 <option selected disabled value="">Choose...</option>
                                 {% for res in industry %}
                                 <option value="{{res.Code}}">{{res.Description}}</option>
                                 {% endfor %}
                             </select>
-                            <div class="invalid-feedback">
-                                Select Your Industry.
-                            </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Hierarchy Level</label>
-                            <select class="form-select" name="hierarchyLevel" id="hierarchyLevel" required>
+                            <select class="form-select" name="hierarchyLevel" id="job_hierarchyLevel" required>
                                 <option selected disabled value="">Choose...</option>
                                 <option value="1">Executive/Director</option>
                                 <option value="2">Senior-Level Manager</option>
@@ -1255,19 +1127,14 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Functional Area</label>
-                            <input type="text" class="form-control" name="functionalArea" id="functionalArea" required>
-                            <div class="invalid-feedback">
-                                Enter Your Functional Area.
-                            </div>
+                            <input type="text" class="form-control" name="functionalArea" id="job_functionalArea"
+                                required>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Job Title</label>
-                            <input type="text" class="form-control" name="jobTitle" id="jobTitle" required>
-                            <div class="invalid-feedback">
-                                Enter Your Job Title
-                            </div>
+                            <input type="text" class="form-control" name="jobTitle" id="job_jobTitle" required>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Present Employment</label>
@@ -1276,62 +1143,49 @@
                                 <option value="False">No</option>
                                 <option value="True">Yes</option>
                             </select>
-                            <div class="invalid-feedback">
-                                Select a Valid Option.
-                            </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Country</label>
-                            <select class="form-select" id="country" name="country" required>
+                            <select class="form-select" id="job_country" name="country" required>
                                 <option selected disabled value="">Choose...</option>
                                 {% for res in country %}
                                 <option value="{{res.Code}}">{{res.Name}}</option>
                                 {% endfor %}
                             </select>
-                            <div class="invalid-feedback">
-                                Select Country.
-                            </div>
                         </div>
 
                     </div>
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Location</label>
-                            <input type="text" class="form-control" name="location" id="location">
+                            <input type="text" class="form-control" name="location" id="job_location">
                             <div class="invalid-feedback">
                                 Enter Job Location
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Employer Email</label>
-                            <input type="email" class="form-control" name="employerEmail" id="employerEmail">
-                            <div class="invalid-feedback">
-                                Enter Employer Email
-                            </div>
+                            <input type="email" class="form-control" name="employerEmail" id="job_employerEmail">
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Employer Postal Address</label>
                             <input type="text" class="form-control" name="employerPostalAddress"
-                                id="employerPostalAddress">
-                            <div class="invalid-feedback">
-                                Enter Employer Postal Address
-                            </div>
+                                id="job_employerPostalAddress">
                         </div>
 
                     </div>
                     <div class="row">
                         <div class="col-md-12">
                             <label class="form-label">Description</label>
-                            <textarea class="form-control" name="description" rows="3" id="description"></textarea>
+                            <textarea class="form-control" name="description" rows="3" id="job_description"></textarea>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary my-3">Submit</button>
-
-                    <p id="innerExperience" style="color:#e51e25;font-weight: bolder;"></p>
+                    <p id="jobOutput" class="my-3" style="color:#e51e25;font-weight: bolder;"></p>
+                    <button type="submit" class="btn btn-primary my-3">Add</button>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'profile' %}" type="button" class="btn btn-success">Finish</a>
             </div>
         </div>
     </div>
@@ -1348,26 +1202,23 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'FnApplicantProfessionalCourse' %}" method="post" class="needs-validation"
-                    novalidate>
+                <form method="post" id="proQualificationForm">
                     {% csrf_token %}
                     <div class="row">
 
                         <div class="col-md-6">
                             <label class="form-label">Qualification</label>
-                            <select class="form-select" id="qualificationCode" name="qualificationCode" required>
+                            <select class="form-select" id="proQualificationCode" name="qualificationCode" required>
                                 <option selected disabled value="">Choose...</option>
                                 {% for res in Quo %}
                                 <option value="{{res.Code}}">{{res.Description}}</option>
                                 {% endfor %}
+                                <option value="Other">OTHER QUALIFICATION</option>
                             </select>
-                            <div class="invalid-feedback">
-                                Select Your Qualification.
-                            </div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Section Level</label>
-                            <select class="form-select" name="sectionLevel" id="sectionLevel">
+                            <select class="form-select" name="sectionLevel" id="pro_sectionLevel">
                                 <option selected value="0">Choose...</option>
                                 <option value="1">Level 1</option>
                                 <option value="2">Level 2</option>
@@ -1381,12 +1232,20 @@
                                 <option value="10">Level 10</option>
                             </select>
                         </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Other Qualification</label>
+                                <textarea class="form-control" name="otherQualification" id="proQulification" rows="3"
+                                    disabled></textarea>
+                            </div>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary my-3">Submit</button>
+                    <p id="proOutput" class="my-3" style="color:#e51e25;font-weight: bolder;"></p>
+                    <button type="submit" class="btn btn-primary my-3">Add</button>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'profile' %}" type="button" class="btn btn-success">Finish</a>
             </div>
         </div>
     </div>
@@ -1402,35 +1261,39 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'FnApplicantProfessionalMembership' %}" method="post" class="needs-validation"
-                    id="" novalidate>
+                <form method="post" id="professionalBodyForm">
                     {% csrf_token %}
                     <div class="row">
-                        <div class="col-md-4">
+                        <div class="col-md-6">
                             <label class="form-label">Professional Body</label>
-                            <select class="form-select" name="professionalBody" required>
+                            <select class="form-select" name="professionalBody" id="ms_professionalBody" required>
                                 <option selected disabled value="">Choose...</option>
                                 {% for res in Pro %}
                                 <option value="{{res.Name}}">{{res.Description2}}</option>
                                 {% endfor %}
+                                <option value="Other">OTHER PROFESSIONAL BODY</option>
                             </select>
-                            <div class="invalid-feedback">
-                                Select Professional Body
-                            </div>
                         </div>
                         <div class="col-md-6">
                             <label class="form-label">Membership No</label>
-                            <input type="text" class="form-control" name="membershipNo" required>
-                            <div class="invalid-feedback">
-                                Enter Your Membership No
+                            <input type="text" class="form-control" name="membershipNo" id="ms_membershipNo" required>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label class="form-label">Other Professional Body</label>
+                                <textarea class="form-control" name="otherProfessionalBody" id="otherProfessionalBody"
+                                    rows="3" disabled></textarea>
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary my-3">Submit</button>
+                    <p id="msOutput" class="my-3" style="color:#e51e25;font-weight: bolder;"></p>
+
+                    <button type="submit" class="btn btn-primary my-3">Add</button>
+
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'profile' %}" type="button" class="btn btn-success">Finish</a>
             </div>
         </div>
     </div>
@@ -1446,22 +1309,23 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'FnApplicantHobby' %}" method="post" class="needs-validation" novalidate>
+                <form method="post" id="hobbyForm">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-12">
                             <label class="form-label">Hobby</label>
-                            <textarea class="form-control" name="hobby" id="hobby" rows="3" required></textarea>
+                            <textarea class="form-control" name="hobby" id="j_hobby" rows="3" required></textarea>
                             <div class="invalid-feedback">
                                 Enter Your Membership No
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary my-3">Submit</button>
+                    <p id="hobbyOutput" class="my-3" style="color:#e51e25;font-weight: bolder;"></p>
+                    <button type="submit" class="btn btn-primary my-3">Add</button>
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'profile' %}" type="button" class="btn btn-success">Finish</a>
             </div>
         </div>
     </div>
@@ -1477,26 +1341,26 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'FnApplicantReferee' %}" method="post" class="needs-validation" novalidate>
+                <form method="post" id="refForm">
                     {% csrf_token %}
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Full Name</label>
-                            <input type="text" class="form-control" name="names" id="names" required>
+                            <input type="text" class="form-control" name="names" id="j_names" required>
                             <div class="invalid-feedback">
                                 Enter Referee Full Name
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Designation</label>
-                            <input type="text" class="form-control" name="designation" id="designation" required>
+                            <input type="text" class="form-control" name="designation" id="j_designation" required>
                             <div class="invalid-feedback">
                                 Enter Referee Designation
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Company</label>
-                            <input type="text" class="form-control" name="company" id="company" required>
+                            <input type="text" class="form-control" name="company" id="j_company" required>
                             <div class="invalid-feedback">
                                 Enter Referee Company
                             </div>
@@ -1505,51 +1369,238 @@
                     <div class="row">
                         <div class="col-md-4">
                             <label class="form-label">Address</label>
-                            <input type="text" class="form-control" name="address" id="address" required>
+                            <input type="text" class="form-control" name="address" id="j_address" required>
                             <div class="invalid-feedback">
                                 Enter Referee Address
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Telephone No</label>
-                            <input type="text" class="form-control" name="telephoneNo" id="telephoneNo" required>
+                            <input type="text" class="form-control" name="telephoneNo" id="j_telephoneNo" required>
                             <div class="invalid-feedback">
                                 Enter Referee Telephone No
                             </div>
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Email</label>
-                            <input type="email" class="form-control" name="email" id="email" required>
+                            <input type="email" class="form-control" name="email" id="j_email" required>
                             <div class="invalid-feedback">
                                 Enter Referee Email
                             </div>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary my-3">Submit</button>
-
-                    <p id="innerefree" style="color:#e51e25;font-weight: bolder;"></p>
+                    <p id="innerefree" class="my-3" style="color:#e51e25;font-weight: bolder;"></p>
+                    <button type="submit" class="btn btn-primary my-3">Add</button>
                 </form>
 
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <a href="{% url 'profile' %}" type="button" class="btn btn-success">Finish</a>
             </div>
         </div>
     </div>
 </div>
 <!-- End Modal -->
 <script>
+    // Academic Qualification JS
     $(document).ready(function () {
-        $("#sett").click(function () {
-            $("#settingTab").addClass("active");
-            $("#HomeTab").removeClass("active");
-        })
-        $("#homs").click(function () {
-            $("#HomeTab").addClass("active");
-            $("#settingTab").removeClass("active");
-        })
+        $('#AcademicQualificationCode').on('change', function () {
+            if (this.value == "Other") {
+                $('#otherAcademic').prop('disabled', false);
+            } else {
+                $('#otherAcademic').prop('disabled', true);
+            }
+        });
     })
+    $(document).on('submit', '#AcademicForm', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnApplicantAcademicQualification" %}',
+            data: {
+                startDate: $("#Aca_startDate").val(),
+                endDate: $("#Aca_endDate").val(),
+                educationType: $("#Aca_educationType").val(),
+                educationLevel: $("#Aca_educationLevel").val(),
+                fieldOfStudy: $("#Aca_fieldOfStudy").val(),
+                qualificationCode: $("#AcademicQualificationCode").val(),
+                institutionName: $("#Aca_institutionName").val(),
+                proficiencyLevel: $("#Aca_proficiencyLevel").val(),
+                country: $("#Aca_country").val(),
+                region: $("#Aca_region").val(),
+                isHighestLevel: $("#isHighestLevel").val(),
+                grade: $("#Aca_grade").val(),
+                otherQualification: $("#otherAcademic").val(),
+                description: $("#Aca_description").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function () {
+                $("#Aca_startDate").val("")
+                $("#Aca_endDate").val("")
+                $("#Aca_educationType").val("")
+                $("#Aca_educationLevel").val("")
+                $("#Aca_fieldOfStudy").val("")
+                $("#AcademicQualificationCode").val("")
+                $("#Aca_institutionName").val("")
+                $("#Aca_proficiencyLevel").val("")
+                $("#Aca_country").val("")
+                $("#Aca_region").val("")
+                $("#isHighestLevel").val("")
+                $("#Aca_grade").val("")
+                $("#otherAcademic").val("")
+                $("#Aca_description").val("")
+                $("p#output").append('Saved. Add More Academic Qualifications')
+            }
+        })
+    });
+    // **** End****
+    // Job Experience JS
+    $(document).on('submit', '#JobExperienceForm', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "JobExperience" %}',
+            data: {
+                startDate: $("#job_startDate").val(),
+                endDate: $("#job_endDate").val(),
+                employer: $("#job_employer").val(),
+                industry: $("#job_industry").val(),
+                hierarchyLevel: $("#job_hierarchyLevel").val(),
+                functionalArea: $("#job_functionalArea").val(),
+                jobTitle: $("#job_jobTitle").val(),
+                isPresentEmployment: $("#isPresentEmployment").val(),
+                country: $("#job_country").val(),
+                location: $("#job_location").val(),
+                employerEmail: $("#job_employerEmail").val(),
+                employerPostalAddress: $("#job_employerPostalAddress").val(),
+                description: $("#job_description").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function () {
+                $("#job_startDate").val("")
+                $("#job_endDate").val("")
+                $("#job_employer").val("")
+                $("#job_industry").val("")
+                $("#job_hierarchyLevel").val("")
+                $("#job_functionalArea").val("")
+                $("#job_jobTitle").val("")
+                $("#isPresentEmployment").val("")
+                $("#job_country").val("")
+                $("#job_location").val("")
+                $("#job_employerEmail").val("")
+                $("#job_employerPostalAddress").val("")
+                $("#job_description").val("")
+                $("p#jobOutput").append('Saved. Add More Job Experience')
+            }
+        })
+    });
+    // **** End****
+    // Professional Qualification JS
+    $(document).ready(function () {
+        $('#proQualificationCode').on('change', function () {
+            if (this.value == "Other") {
+                $('#proQulification').prop('disabled', false);
+            } else {
+                $('#proQulification').prop('disabled', true);
+            }
+        });
+    })
+    $(document).on('submit', '#proQualificationForm', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnApplicantProfessionalCourse" %}',
+            data: {
+                qualificationCode: $("#proQualificationCode").val(),
+                sectionLevel: $("#pro_sectionLevel").val(),
+                otherQualification: $("#proQulification").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function () {
+                $("#proQualificationCode").val("")
+                $("#pro_sectionLevel").val("")
+                $("#proQulification").val("")
+                $("p#proOutput").append('Saved. Add More Professional Qualification')
+            }
+        })
+    });
+    // **** End****
+    // ProfessionalMembership JS
+    $(document).ready(function () {
+        $('#ms_professionalBody').on('change', function () {
+            if (this.value == "Other") {
+                $('#otherProfessionalBody').prop('disabled', false);
+            } else {
+                $('#otherProfessionalBody').prop('disabled', true);
+            }
+        });
+    })
+    $(document).on('submit', '#professionalBodyForm', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnApplicantProfessionalMembership" %}',
+            data: {
+                professionalBody: $("#ms_professionalBody").val(),
+                membershipNo: $("#ms_membershipNo").val(),
+                otherProfessionalBody: $("#otherProfessionalBody").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function () {
+                $("#ms_professionalBody").val("")
+                $("#ms_membershipNo").val("")
+                $("#otherProfessionalBody").val("")
+                $("p#msOutput").append('Saved. Add More Professional Bodies')
+            }
+        })
+    });
+    // **** End****
+    // Hobby JS
 
+    $(document).on('submit', '#hobbyForm', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnApplicantHobby" %}',
+            data: {
+                hobby: $("#j_hobby").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function () {
+                $("#j_hobby").val("")
+                $("p#hobbyOutput").append('Saved. Add More Hobbies')
+            }
+        })
+    });
+    // **** End****
+    // Hobby JS
+
+    $(document).on('submit', '#refForm', function (e) {
+        e.preventDefault();
+        $.ajax({
+            type: 'POST',
+            url: '{% url "FnApplicantReferee" %}',
+            data: {
+                names: $("#j_names").val(),
+                designation: $("#j_designation").val(),
+                company: $("#j_company").val(),
+                address: $("#j_address").val(),
+                telephoneNo: $("#j_telephoneNo").val(),
+                email: $("#j_email").val(),
+                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+            },
+            success: function () {
+                $("#j_hobby").val("")
+                $("#j_designation").val("")
+                $("#j_company").val("")
+                $("#j_address").val("")
+                $("#j_telephoneNo").val("")
+                $("#j_email").val("")
+                $("p#innerefree").append('Saved. Add More Referees')
+            }
+        })
+    });
+    // **** End****
     document.getElementById('country').addEventListener('change', function () {
         if (this.value == "KE") {
             document.getElementById('county').disabled = false;
@@ -1564,25 +1615,5 @@
             document.getElementById('disability').disabled = true;
         }
     });
-    // Example starter JavaScript for disabling form submissions if there are invalid fields
-    (function () {
-        'use strict'
-
-        // Fetch all the forms we want to apply custom Bootstrap validation styles to
-        var forms = document.querySelectorAll('.needs-validation')
-
-        // Loop over them and prevent submission
-        Array.prototype.slice.call(forms)
-            .forEach(function (form) {
-                form.addEventListener('submit', function (event) {
-                    if (!form.checkValidity()) {
-                        event.preventDefault()
-                        event.stopPropagation()
-                    }
-
-                    form.classList.add('was-validated')
-                }, false)
-            })
-    })()
 </script>
 {% endblock %}
