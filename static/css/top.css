@@ -85,22 +85,22 @@ ul.breadcrumb li a:hover {
 }
 
 .l-bg-cherry {
-    background: #e51e25 !important;
+    background: linear-gradient(to right, #444a4a, #e51e25) !important;
     color: #fff;
 }
 
 .l-bg-blue-dark {
-    background: #124887 !important;
+    background: linear-gradient(to right, #373b44, #144a85) !important;
     color: #fff;
 }
 
 .l-bg-green-dark {
-    background: #134326 !important;
+    background: linear-gradient(to right, #0a504a, #134326) !important;
     color: #fff;
 }
 
 .l-bg-orange-dark {
-    background: black !important;
+    background:linear-gradient(to right, #a86008, #c18b39) !important;
     color: #fff;
 }
 
