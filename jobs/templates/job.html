@@ -61,7 +61,6 @@
                                         style="width:100%">
                                         <thead>
                                             <tr id="tops">
-                                                <th id="long">Job No</th>
                                                 <th>Job Description</th>
                                                 <th>Positions</th>
                                                 <th>Appointment Type</th>
@@ -72,7 +71,6 @@
                                         <tbody>
                                             {% for res in res %}
                                             <tr>
-                                                <td>{{res.Job_ID}}</td>
                                                 <td id="rap">{{res.Description}}</td>
                                                 <td>{{res.Positions}}</td>
                                                 <td>{{res.Appointment_Type}}</td>
@@ -103,9 +101,8 @@
                                                 <th>Job</th>
                                                 <th>Submitted</th>
                                                 <th>Qualified</th>
-                                                <th>Shortlist</th>
+                                                <th>Shortlisted</th>
                                                 <th>Cancel Application</th>
-                                                <th>Action</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -120,7 +117,7 @@
                                                         {% csrf_token %}
                                                         <input type="hidden" name="needCode" value="{{res.Need_Code}}">
                                                         <button type="submit"> <i class="las la-trash"
-                                                                style="font-size: 1.5rem;"></i></button>
+                                                                style="font-size: 1.5rem;"></i> </button>
                                                     </form>
                                                 </td>
                                             </tr>
