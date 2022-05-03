@@ -48,7 +48,7 @@ def CompanyJobs(request):
     return render(request, 'job.html', ctx)
 
 
-def JobDetail(request, pk):
+def JobDetail(request, pk, no):
     session = requests.Session()
     session.auth = config.AUTHS
 
@@ -124,7 +124,6 @@ def JobDetail(request, pk):
         print(e)
 
     my_name = request.session['E_Mail']
-
     todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
     ctx = {"today": todays_date, "res": res,
            "Qualifications": response, "experience": E_response,
@@ -136,7 +135,7 @@ def JobDetail(request, pk):
     return render(request, 'jobDetail.html', ctx)
 
 
-def FnApplicantApplyJob(request, pk):
+def FnApplicantApplyJob(request, pk, no):
     applicantNo = request.session['No_']
     needCode = ""
 
@@ -145,17 +144,17 @@ def FnApplicantApplyJob(request, pk):
             needCode = request.POST.get('needCode')
         except ValueError:
             messages.error(request, "Invalid credentials, try again")
-            return redirect('jobDetail', pk=pk)
+            return redirect('jobDetail', pk=pk, no=no)
     try:
         response = config.CLIENT.service.FnApplicantApplyJob(
             applicantNo, needCode)
         print(response)
         messages.success(request, "Application Sent successfully")
-        return redirect('jobDetail', pk=pk)
+        return redirect('jobDetail', pk=pk, no=no)
     except Exception as e:
         messages.error(request, e)
         print(e)
-    return redirect('jobDetail', pk=pk)
+    return redirect('jobDetail', pk=pk, no=no)
 
 
 def FnWithdrawJobApplication(request):
@@ -181,33 +180,39 @@ def FnWithdrawJobApplication(request):
     return redirect('job')
 
 
-def UploadAttachedDocument(request, pk):
-    docNo = pk
+def UploadAttachedDocument(request, pk, no):
+    docNo = request.session['No_']
     response = ""
     fileName = ""
     attachment = ""
-    tableID = 52177788
+    applicantNo = request.session['No_']
+    needCode = no
+    tableID = 52177607
 
     if request.method == "POST":
         try:
             attach = request.FILES.getlist('attachment')
         except Exception as e:
             print("Not Working")
-            return redirect('jobDetail', pk=pk)
+            return redirect('jobDetail', pk=pk, no=no)
+        responses = config.CLIENT.service.FnInitiateApplication(
+            applicantNo, needCode)
         for files in attach:
             fileName = request.FILES['attachment'].name
             attachment = base64.b64encode(files.read())
+
             try:
                 response = config.CLIENT.service.FnUploadAttachedDocument(
                     docNo, fileName, attachment, tableID)
             except Exception as e:
                 messages.error(request, e)
                 print(e)
+
         if response == True:
             messages.success(request, "Successfully Sent !!")
-            return redirect('jobDetail', pk=pk)
+            return redirect('jobDetail', pk=pk, no=no)
         else:
             messages.error(request, "Not Sent !!")
-            return redirect('jobDetail', pk=pk)
+            return redirect('jobDetail', pk=pk, no=no)
 
-    return redirect('jobDetail', pk=pk)
+    return redirect('jobDetail', pk=pk, no=no)

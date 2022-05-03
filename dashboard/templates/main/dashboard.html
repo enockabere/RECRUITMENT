@@ -6,33 +6,28 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js"></script>
 <section>
     <div class="content-wrapper general-bg" style="padding-bottom: 1rem ">
-        <div class="row" id="proBanner">
-            <div class="col-12">
-                <span class="d-flex align-items-center purchase-popup">
-                    <img src="../../../static/img/logo/fav.png" width="70px" class="img-fluid" alt="" srcset="">
-                    <a href="{% url 'profile' %}" class="btn purchase-button">My Profile <i
-                            class="las la-user-circle fill-white" style="font-size:1rem;color: white;"></i></a>
-                </span>
-            </div>
-        </div>
-        <div class="d-xl-flex justify-content-between align-items-start">
-            <h2 class="text-dark font-weight-bold mb-2"> Overview dashboard </h2>
-            <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
-                <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
-                    <button class="btn bg-white dropdown-toggle p-3 d-flex align-items-center" type="button"
-                        id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
-                            class="mdi mdi-calendar mr-1"></i>{{today}}
-                    </button>
+        <div class="row">
+            <div class="col-md-12">
+                <button class="btn p-3 align-items-center text-white dateBtn" type="button"
+                    style="display: inline-block;background: #144a85;">
+                    <i class="mdi mdi-calendar mr-1"></i>{{today}}
+                </button>
+                <div class="toast show toast align-items-center text-white  border-0 homeToast" role="alert"
+                    aria-live="assertive" aria-atomic="true"
+                    style="margin-left: auto;margin-right:0;margin-top: -2.7rem;background: #144a85;">
+                    <div class="toast-header">
+                        <i class="las la-bell"></i>
+                        <strong class="me-auto">Reminder</strong>
+                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+                    </div>
+                    <div class="toast-body">
+                        Update your <a href="{% url 'profile' %}" class="text-warning">profile</a> information
+                        before
+                        applying for
+                        any of our Jobs
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="alert alert-success" role="alert">
-            <h4 class="alert-heading">Hello!</h4>
-            <p>Please Ensure that you have filled or updated all your profile information before applying for
-                any of our Jobs, otherwise your submission won't be successful.
-            </p>
-            <hr>
-            <p class="mb-0"><a href="{% url 'profile' %}">Click here to update profile information</a></p>
         </div>
         <div class="row my-4">
             <div class="col-md-6 my-2">
@@ -74,7 +69,6 @@
                         style="width:100%">
                         <thead>
                             <tr id="tops">
-                                <th id="long">Job ID</th>
                                 <th>Job Description</th>
                                 <th>Positions</th>
                                 <th>Appointment Type</th>
@@ -85,13 +79,12 @@
                         <tbody>
                             {% for res in job %}
                             <tr>
-                                <td>{{res.Job_ID}}</td>
                                 <td id="rap">{{res.Description}}</td>
                                 <td>{{res.Positions}}</td>
                                 <td>{{res.Appointment_Type}}</td>
                                 <td>{{res.Priority}}</td>
                                 <td>
-                                    <a type="button" href="{% url 'jobDetail' res.Job_ID %}"
+                                    <a type="button" href="{% url 'jobDetail' res.Job_ID res.No_ %}"
                                         class="btn btn-success btn-icon-text" data-toggle="tooltip" data-placement="top"
                                         title="view" style="background: #25CC88;">View
                                         <i class="las la-external-link-alt" style="font-size: 1rem"></i>

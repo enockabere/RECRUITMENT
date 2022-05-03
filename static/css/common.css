@@ -20,6 +20,13 @@
     #pr {
         margin-bottom: 1rem;
     }
+    .dateBtn{
+        display:none !important;
+    }
+    .homeToast{
+        margin: 0rem auto 0rem auto !important;
+        width:100% !important;
+    }
 
     #formContainer {
         margin-top: 1rem;
