@@ -225,6 +225,7 @@ def FnApplicantDetails(request):
     postalAddress = ""
     postalCode = ""
     residentialAddress = ""
+    disabilityGrade = ''
     if request.method == 'POST':
         try:
             firstName = request.POST.get('firstName')
@@ -242,6 +243,7 @@ def FnApplicantDetails(request):
             postalAddress = request.POST.get('postalAddress')
             postalCode = request.POST.get('postalCode')
             residentialAddress = request.POST.get('residentialAddress')
+            disabilityGrade = int(request.POST.get('disabilityGrade'))
         except ValueError:
             messages.error(request, "Not sent. Invalid Input, Try Again!!")
             return redirect('profile')
@@ -253,7 +255,7 @@ def FnApplicantDetails(request):
     gender = (Data.values).value
     try:
         response = config.CLIENT.service.FnApplicantDetails(applicantNo, firstName, middleName, lastName, idNumber, gender, citizenship,
-                                                            countyCode, maritalStatus, ethnicOrigin, disabled, dob, phoneNumber, postalAddress, postalCode, residentialAddress)
+                                                            countyCode, maritalStatus, ethnicOrigin, disabled, dob, phoneNumber, postalAddress, postalCode, residentialAddress, disabilityGrade)
         print(response)
         messages.success(request, "Successfully Added.")
         return redirect('profile')
@@ -474,21 +476,13 @@ def FnApplicantReferee(request):
         except ValueError:
             messages.error(request, "Not sent. Invalid Input, Try Again!!")
             return redirect('profile')
-        print(names)
-        print(designation)
-        print(company)
-
-    try:
-        response = config.CLIENT.service.FnApplicantReferee(
-            applicantNo, lineNo, names, designation, company, address, telephoneNo, email, myAction)
-        print(response)
-        messages.success(request, "Successfully Added.")
-        return redirect('profile')
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('profile')
-
-
-def FnApplicantJobAttachment(request):
+        try:
+            response = config.CLIENT.service.FnApplicantReferee(
+                applicantNo, lineNo, names, designation, company, address, telephoneNo, email, myAction)
+            print(response)
+            messages.success(request, "Successfully Added.")
+            return redirect('profile')
+        except Exception as e:
+            messages.error(request, e)
+            print(e)
     return redirect('profile')

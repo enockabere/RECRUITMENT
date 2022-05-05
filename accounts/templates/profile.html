@@ -17,7 +17,29 @@
                     </button>
                 </div>
             </div>
-        </div>}
+        </div>
+        <!--alert -->
+        {% if messages %}
+        {% for message in messages %}
+        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <div class="alert alert-success d-flex align-items-center alert-dismissible alert-success" role="alert">
+            <i class="las la-check-double" style="color: white;font-size: 2rem"></i>
+            <div class="a-icon mx-2">
+                {{message}}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-danger d-flex align-items-center alert-dismissible alert-warn" role="alert">
+            <i class="las la-exclamation-triangle" style="color: white;font-size: 2rem"></i>
+            <div class="a-icon mx-2">
+                {{message}}
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+        {% endif %}
+        {% endfor %}
+        {% endif %}
         <div class="row">
             <div class="col-md-12">
                 <div class="my-3">
@@ -105,6 +127,15 @@
                                                                                         <input type="text"
                                                                                             class="form-control"
                                                                                             placeholder="{{applicant.Disabled}}"
+                                                                                            readonly>
+                                                                                    </div>
+                                                                                    <div class="col-md-6">
+                                                                                        <label
+                                                                                            class="form-label">Disability
+                                                                                            Level</label>
+                                                                                        <input type="text"
+                                                                                            class="form-control"
+                                                                                            placeholder="{{applicant.Disability_Grade}}"
                                                                                             readonly>
                                                                                     </div>
                                                                                     <div class="col-md-6">
@@ -871,14 +902,7 @@
                         </div>
                         <div class="col-md-4">
                             <label class="form-label">Disability Level</label>
-                            <select class="form-select" name="disability" id="disability" disabled>
-                                <option selected disabled value="">Choose...</option>
-                                <option value="0">1</option>
-                                <option value="1">2</option>
-                            </select>
-                            <div class="invalid-feedback">
-                                Select a Valid Option.
-                            </div>
+                            <input type="number" class="form-control" name="disabilityGrade" id="disability" disabled>
                         </div>
                         <div class="col-md-4">
                             <label for="" class="form-label">Date of Birth</label>

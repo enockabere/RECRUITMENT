@@ -16,6 +16,4 @@ urlpatterns = [
          name='FnApplicantProfessionalMembership'),
     path('FnApplicantHobby', views.FnApplicantHobby, name='FnApplicantHobby'),
     path('FnApplicantReferee', views.FnApplicantReferee, name='FnApplicantReferee'),
-    path('FnApplicantJobAttachment', views.FnApplicantJobAttachment,
-         name='FnApplicantJobAttachment'),
 ]
