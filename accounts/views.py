@@ -17,101 +17,107 @@ import enum
 
 
 def profile_request(request):
-    todays_date = date.today()
-    year = todays_date.year
-    session = requests.Session()
-    session.auth = config.AUTHS
-
-    citizenship = config.O_DATA.format("/CountryRegion")
-    countyCode = config.O_DATA.format("/QyCounties")
-    industry = config.O_DATA.format("/QyJobIndustries")
-    Qualification = config.O_DATA.format("/QyQualificationCodes")
-    ProfessionalBodies = config.O_DATA.format("/QyProfessionalBodies")
-    Study = config.O_DATA.format("/QyFieldsOfStudy")
-    Access_Point = config.O_DATA.format("/QyApplicants")
-    Qualifications = config.O_DATA.format("/QyApplicantAcademicQualifications")
-    Experience = config.O_DATA.format("/QyApplicantJobExperience")
-    Courses = config.O_DATA.format("/QyApplicantJobProfessionalCourses")
-    Memberships = config.O_DATA.format("/QyApplicantProfessionalMemberships")
-    Hobbies = config.O_DATA.format("/QyApplicantHobbies")
-    Referees = config.O_DATA.format("/QyApplicantReferees")
-    res = ""
-    My_Qualifications = []
-    My_Experience = []
-    My_Course = []
-    My_Membership = []
-    My_Hobby = []
-    My_Referees = []
     try:
-        response = session.get(citizenship, timeout=10).json()
-        county_res = session.get(countyCode, timeout=10).json()
-        industry_res = session.get(industry, timeout=10).json()
-        Qualification_res = session.get(Qualification, timeout=10).json()
-        ProfessionalBodies_res = session.get(
-            ProfessionalBodies, timeout=10).json()
+        todays_date = date.today()
+        year = todays_date.year
+        session = requests.Session()
+        session.auth = config.AUTHS
 
-        Study_res = session.get(Study, timeout=10).json()
-        App_response = session.get(Access_Point, timeout=10).json()
-        Qualifications_res = session.get(Qualifications, timeout=10).json()
-        Experience_res = session.get(Experience, timeout=10).json()
-        Courses_res = session.get(Courses, timeout=10).json()
-        Memberships_res = session.get(Memberships, timeout=10).json()
-        Hobbies_res = session.get(Hobbies, timeout=10).json()
-        Referees_Res = session.get(Referees, timeout=10).json()
+        citizenship = config.O_DATA.format("/CountryRegion")
+        countyCode = config.O_DATA.format("/QyCounties")
+        industry = config.O_DATA.format("/QyJobIndustries")
+        Qualification = config.O_DATA.format("/QyQualificationCodes")
+        ProfessionalBodies = config.O_DATA.format("/QyProfessionalBodies")
+        Study = config.O_DATA.format("/QyFieldsOfStudy")
+        Access_Point = config.O_DATA.format("/QyApplicants")
+        Qualifications = config.O_DATA.format(
+            "/QyApplicantAcademicQualifications")
+        Experience = config.O_DATA.format("/QyApplicantJobExperience")
+        Courses = config.O_DATA.format("/QyApplicantJobProfessionalCourses")
+        Memberships = config.O_DATA.format(
+            "/QyApplicantProfessionalMemberships")
+        Hobbies = config.O_DATA.format("/QyApplicantHobbies")
+        Referees = config.O_DATA.format("/QyApplicantReferees")
+        res = ""
+        My_Qualifications = []
+        My_Experience = []
+        My_Course = []
+        My_Membership = []
+        My_Hobby = []
+        My_Referees = []
+        try:
+            response = session.get(citizenship, timeout=10).json()
+            county_res = session.get(countyCode, timeout=10).json()
+            industry_res = session.get(industry, timeout=10).json()
+            Qualification_res = session.get(Qualification, timeout=10).json()
+            ProfessionalBodies_res = session.get(
+                ProfessionalBodies, timeout=10).json()
 
-        for applicant in App_response['value']:
-            if applicant['No_'] == request.session['No_']:
-                fullname = applicant['First_Name'] + \
-                    " " + applicant['Last_Name']
+            Study_res = session.get(Study, timeout=10).json()
+            App_response = session.get(Access_Point, timeout=10).json()
+            Qualifications_res = session.get(Qualifications, timeout=10).json()
+            Experience_res = session.get(Experience, timeout=10).json()
+            Courses_res = session.get(Courses, timeout=10).json()
+            Memberships_res = session.get(Memberships, timeout=10).json()
+            Hobbies_res = session.get(Hobbies, timeout=10).json()
+            Referees_Res = session.get(Referees, timeout=10).json()
 
-                request.session['username'] = fullname
-                username = request.session['username']
-                res = applicant
-        for Qualifications in Qualifications_res['value']:
-            if Qualifications['Applicant_No_'] == request.session['No_']:
-                output_json = json.dumps(Qualifications)
-                My_Qualifications.append(json.loads(output_json))
-        for Experience in Experience_res['value']:
-            if Experience['Applicant_No_'] == request.session['No_']:
-                output_json = json.dumps(Experience)
-                My_Experience.append(json.loads(output_json))
-        for course in Courses_res['value']:
-            if course['Applicant_No_'] == request.session['No_']:
-                output_json = json.dumps(course)
-                My_Course.append(json.loads(output_json))
-        for membership in Memberships_res['value']:
-            if membership['Applicant_No_'] == request.session['No_']:
-                output_json = json.dumps(membership)
-                My_Membership.append(json.loads(output_json))
-        for hobby in Hobbies_res['value']:
-            if hobby['No_'] == request.session['No_']:
-                output_json = json.dumps(hobby)
-                My_Hobby.append(json.loads(output_json))
-        for ref in Referees_Res['value']:
-            if ref['No'] == request.session['No_']:
-                output_json = json.dumps(ref)
-                My_Referees.append(json.loads(output_json))
-        country = response['value']
-        county = county_res['value']
-        ind = industry_res['value']
-        Quo = Qualification_res['value']
-        Pro = ProfessionalBodies_res['value']
-        FStudy = Study_res['value']
-    except requests.exceptions.ConnectionError as e:
-        print(e)
+            for applicant in App_response['value']:
+                if applicant['No_'] == request.session['No_']:
+                    fullname = applicant['First_Name'] + \
+                        " " + applicant['Last_Name']
 
-    my_name = request.session['E_Mail']
+                    request.session['username'] = fullname
+                    username = request.session['username']
+                    res = applicant
+            for Qualifications in Qualifications_res['value']:
+                if Qualifications['Applicant_No_'] == request.session['No_']:
+                    output_json = json.dumps(Qualifications)
+                    My_Qualifications.append(json.loads(output_json))
+            for Experience in Experience_res['value']:
+                if Experience['Applicant_No_'] == request.session['No_']:
+                    output_json = json.dumps(Experience)
+                    My_Experience.append(json.loads(output_json))
+            for course in Courses_res['value']:
+                if course['Applicant_No_'] == request.session['No_']:
+                    output_json = json.dumps(course)
+                    My_Course.append(json.loads(output_json))
+            for membership in Memberships_res['value']:
+                if membership['Applicant_No_'] == request.session['No_']:
+                    output_json = json.dumps(membership)
+                    My_Membership.append(json.loads(output_json))
+            for hobby in Hobbies_res['value']:
+                if hobby['No_'] == request.session['No_']:
+                    output_json = json.dumps(hobby)
+                    My_Hobby.append(json.loads(output_json))
+            for ref in Referees_Res['value']:
+                if ref['No'] == request.session['No_']:
+                    output_json = json.dumps(ref)
+                    My_Referees.append(json.loads(output_json))
+            country = response['value']
+            county = county_res['value']
+            ind = industry_res['value']
+            Quo = Qualification_res['value']
+            Pro = ProfessionalBodies_res['value']
+            FStudy = Study_res['value']
+        except requests.exceptions.ConnectionError as e:
+            print(e)
 
-    todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
-    ctx = {"year": year, "country": country,
-           "county": county, "industry": ind,
-           "Quo": Quo, "Pro": Pro,
-           "Study": FStudy, "applicant": res,
-           "fullname": fullname, "Qualify": My_Qualifications,
-           "experience": My_Experience, "course": My_Course,
-           "membership": My_Membership, "hobby": My_Hobby,
-           "Referee": My_Referees, "today": todays_date,
-           "my_name": my_name}
+        my_name = request.session['E_Mail']
+
+        todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
+        ctx = {"year": year, "country": country,
+               "county": county, "industry": ind,
+               "Quo": Quo, "Pro": Pro,
+               "Study": FStudy, "applicant": res,
+               "fullname": fullname, "Qualify": My_Qualifications,
+               "experience": My_Experience, "course": My_Course,
+               "membership": My_Membership, "hobby": My_Hobby,
+               "Referee": My_Referees, "today": todays_date,
+               "my_name": my_name}
+    except KeyError:
+        messages.error(request, "Session has expired, Login Again")
+        return redirect('login')
 
     return render(request, 'profile.html', ctx)
 
@@ -486,3 +492,13 @@ def FnApplicantReferee(request):
             messages.error(request, e)
             print(e)
     return redirect('profile')
+
+
+def logout(request):
+    try:
+        del request.session['No_']
+        del request.session['E_Mail']
+        messages.success(request, 'Logged out successfully')
+    except KeyError:
+        print(False)
+    return redirect('login')
