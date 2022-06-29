@@ -179,10 +179,10 @@ django_heroku.settings(locals())
 
 AUTHS = Session()
 
-WEB_SERVICE_PWD = 'Password@123'
+WEB_SERVICE_PWD = 'Admin@123'
 BASE_URL = 'http://20.121.189.145:7047/KMPDC/WS/KMPDC/Codeunit/CuRecruitmentWebPortal'
 O_DATA = "http://20.121.189.145:7048/KMPDC/ODataV4/Company(%27KMPDC%27){}"
-AUTHS.auth = HTTPBasicAuth('WINNIE', WEB_SERVICE_PWD)
+AUTHS.auth = HTTPBasicAuth('EMAEBA', WEB_SERVICE_PWD)
 
 CLIENT = Client(BASE_URL, transport=Transport(session=AUTHS))
-AUTHS = HTTPBasicAuth('WINNIE', WEB_SERVICE_PWD)
+AUTHS = HTTPBasicAuth('EMAEBA', WEB_SERVICE_PWD)

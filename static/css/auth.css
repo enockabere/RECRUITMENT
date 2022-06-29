@@ -275,7 +275,15 @@ label {
     text-shadow: 0 1px 0 var(--first-color);
     font-family: var(--primary-font);
 }
-
+#specialist-dropzone {
+    background: white;
+    border-radius: 5px;
+    border: 2px dashed rgb(0, 135, 247);
+    border-image: none;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
 .text-200 {
     font-size: .8rem;
     text-shadow: 0 1px 0 rgb(255, 255, 255);

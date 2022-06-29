@@ -4,6 +4,21 @@
 {% block main %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
+
+<style>
+    #specialist-dropzone {
+        background: white;
+        border-radius: 5px;
+        border: 2px dashed rgb(0, 135, 247);
+        border-image: none;
+        max-width: 500px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
 <section class="dash2">
     <div class="content-wrapper" style="padding-bottom: 3rem;">
         <div class="d-xl-flex justify-content-between align-items-start">
@@ -432,41 +447,10 @@
                             </div>
                         </div>
                     </div>
-                    <div class="accordion-item">
-                        <h2 class="accordion-header" id="headingFour">
-                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#collapseFour" aria-expanded="false" aria-controls="collapseFour">
-                                <h5>Required Attachments</h5>
-                            </button>
-                        </h2>
-                        <div id="collapseFour" class="accordion-collapse collapse" aria-labelledby="headingFour"
-                            data-bs-parent="#accordionExample">
-                            <div class="accordion-body">
-                                {% for res in Attach %}
-                                <div class="row mt-3">
-                                    <div class="col-md-3">
-                                        <div class="j-icon">
-                                            <i class="las la-file"></i>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-9">
-                                        <div class="j-o-text">
-                                            <h6>
-                                                {{res.Attachment}}
-                                            </h6>
-                                            <small>
-                                                {{res.Description}}
-                                            </small>
-                                        </div>
-                                    </div>
-                                </div>
-                                {% endfor %}
-                                <button class="btn btn-primary btn-lg my-3" type="button" data-bs-toggle="modal"
-                                    data-bs-target="#attached" style="width:100%"> Attach
-                                    Documents <i class="las la-file-upload"></i></button>
-                            </div>
-                        </div>
-                    </div>
+
+                    <button class="btn btn-primary btn-lg my-3" type="button" data-bs-toggle="modal"
+                        data-bs-target="#attached" style="width:100%"> Required Attachments <i
+                            class="las la-file-upload"></i></button>
                 </div>
 
             </div>
@@ -484,36 +468,51 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <form action="{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}" method="POST"
-                    enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <p class="text-dark">Select and Upload the following Attachments all at once/Separately. </p>
-                    {% for res in Attach %}
-                    <div class="card doc-card mt-4 p-3">
-                        <div class="row">
-                            <div class="col-md-3">
-                                <i class="las la-file-upload" style="color: red;font-size:1.5rem"></i>
-                            </div>
-                            <div class="col-md-9">
-                                <strong class="text-dark">{{res.Description}}</strong>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                    <div class=" mb-3">
-                        <label class="form-label">Attachments</label>
-                        <input class="form-control" name="attachment" type="file" multiple>
-                    </div>
+                <p class="text-dark">Select and Upload the following Attachments all at once/Separately. </p>
 
+                <ol>
+                    {% for res in Attach %}
+                    <li>{{res.Description}}</li>
+                    {% endfor %}
+                </ol>
+                <form action="{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}" class="dropzone dz"
+                    id="specialist-dropzone" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="fallback">
+                        <input name="file" class="form-control" name="attachment" type="file" multiple />
+                        <button type="submit" class="btn br-primary">Submit</button>
+                    </div>
+                </form>
 
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Submit</button>
             </div>
-            </form>
         </div>
     </div>
 </div>
+<script>
+    Dropzone.autoDiscover = false;
+    const myDropzone = new Dropzone('#specialist-dropzone', {
+        url: "{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}",
+        method: "post",
+        paramName: "attachment",
+        maxFiles: 10,
+        acceptedFiles: ".doc,.doc,.pdf",
+        clickable: true,
+        maxFilesize: 100,
+        dictDefaultMessage: "Click or Drag and Drop files here to upload",
+        dictFallbackMessage: "Your browser does not support drag and drop file uploads.",
+        dictFallbackText: "Please use the fallback form below to upload your files.",
+        dictResponseError: "Server responded with {{statusCode}} code.",
+        dictCancelUpload: "Cancel upload",
+        dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
+        dictRemoveFile: "Remove",
+        dictRemoveFileConfirmation: null,
+        dictMaxFilesExceeded: "You can only upload {{maxFiles}} files.",
+    })
+</script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 {% endblock %}
