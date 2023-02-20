@@ -1,296 +1,271 @@
-@import url('https://fonts.googleapis.com/css2?family=Gelasio&family=Titillium+Web:wght@200&display=swap');
+/** @format */
+
+@import url("https://fonts.googleapis.com/css2?family=Gelasio&family=Titillium+Web:wght@200&display=swap");
 
 :root {
-    --header-height: 3rem;
-    --nav-width: 76px;
-    --first-color: #144a85;
-    --first-color-light: #6c8aaf;
-    --green-color: #25CC88;
-    --red-color: #e51e25;
-    --sand-tan: #e1b382;
-    --dark-color: #444a4a;
-    --olive: #A3BCB6;
-    --white-color: #F7F6FB;
-    --normal-font-size: 1rem;
-    --z-fixed: 100;
-    --primary-font: 'Gelasio', serif;
-    --normal-font: 'Titillium Web', sans-serif;
+  --header-height: 3rem;
+  --nav-width: 76px;
+  --first-color: #144a85;
+  --first-color-light: #6c8aaf;
+  --green-color: #25cc88;
+  --red-color: #e51e25;
+  --sand-tan: #e1b382;
+  --dark-color: #444a4a;
+  --olive: #a3bcb6;
+  --white-color: #f7f6fb;
+  --normal-font-size: 1rem;
+  --z-fixed: 100;
+  --primary-font: "Gelasio", serif;
+  --normal-font: "Titillium Web", sans-serif;
 }
 
 body {
-    background: #181824;
-    scroll-behavior: smooth;
-    height: auto;
+  background: #181824;
+  scroll-behavior: smooth;
+  height: auto;
 }
 
 /* Alerts */
 .alert-warn {
-    background: var(--red-color);
-    border-color: var(--red-color);
-    color: white;
+  background: var(--red-color);
+  border-color: var(--red-color);
+  color: white;
 }
 
 .alert-success {
-    background: #134326;
-    border-color: #134326;
-    color: white;
+  background: #134326;
+  border-color: #134326;
+  color: white;
 }
 
-
 .a-icon {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .a-icon i {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 /* details */
 #regForm {
-    background-color: #ffffff;
-    width: 100%;
-    padding: 10px;
+  background-color: #ffffff;
+  width: 100%;
+  padding: 10px;
 }
 
 h1 {
-    text-align: left;
-    font-family: var(--primary-font);
-    font-size: 1rem;
+  text-align: left;
+  font-family: var(--primary-font);
+  font-size: 1rem;
 }
 
 .w-name {
-    font-family: var(--primary-font);
-    color: var(--green-color);
+  font-family: var(--primary-font);
+  color: var(--green-color);
 }
 
 input {
-    padding: 10px;
-    width: 100%;
-    font-size: 17px;
-    font-family: var(--normal-font);
-    border: 1px solid var(--dark-color);
+  padding: 10px;
+  width: 100%;
+  font-size: 17px;
+  font-family: var(--normal-font);
+  border: 1px solid var(--dark-color);
 }
 
 /* Mark input boxes that gets an error on validation: */
 input.invalid {
-    background-color: #ffdddd;
+  background-color: #ffdddd;
 }
 
 /* Hide all steps by default: */
 .tab {
-    display: none;
+  display: none;
 }
 
 button {
-    background-color: var(--first-color);
-    color: #ffffff;
-    font-family: var(--normal-font);
-    border: 1px solid var(--first-color);
-    padding: 10px 20px;
-    font-size: 17px;
-    border-radius: 40px;
-    cursor: pointer;
+  background-color: var(--first-color);
+  color: #ffffff;
+  font-family: var(--normal-font);
+  border: 1px solid var(--first-color);
+  padding: 10px 20px;
+  font-size: 17px;
+  border-radius: 40px;
+  cursor: pointer;
 }
 
 button:hover {
-    opacity: 0.8;
+  opacity: 0.8;
 }
 
 #prevBtn {
-    background-color: var(--sand-tan);
-    font-family: var(--normal-font);
-    color: #000;
+  background-color: var(--sand-tan);
+  font-family: var(--normal-font);
+  color: #000;
 }
 
 .myForm {
-    background: white;
-    padding: 1rem;
-}
-
-/* Make circles that indicate the steps of the form: */
-.step {
-    height: 15px;
-    width: 15px;
-    margin: 0 2px;
-    background-color: var(--red-color);
-    border: none;
-    border-radius: 50%;
-    display: inline-block;
-    opacity: 0.5;
-}
-
-.step.active {
-    opacity: 1;
-}
-
-/* Mark the steps that are finished and valid: */
-.step.finish {
-    background-color: var(--green-color);
+  background: white;
+  padding: 1rem;
 }
 
 .general-bg {
-    min-height: 100vh;
-    background: url(../img/bg/1.jpg);
-    background-attachment: fixed;
+  min-height: 100vh;
+  background: url(../img/bg/4.png);
+  background-attachment: fixed;
 }
 
 .form-label {
-    padding-top: calc(0.94rem + 1px);
-    padding-bottom: calc(0.94rem + 1px);
-    margin-bottom: 0;
-    font-size: inherit;
-    font-family: var(--primary-font);
-    line-height: 1;
-    color: #000;
+  padding-top: calc(0.94rem + 1px);
+  padding-bottom: calc(0.94rem + 1px);
+  margin-bottom: 0;
+  font-size: inherit;
+  font-family: var(--primary-font);
+  line-height: 1;
+  color: #000;
 }
 
 .form-control,
 .form-select {
-    color: #3f3f3f;
-    background-color: transparent;
-    background-clip: padding-box;
-    border: 1px solid #28a745;
-    border-radius: 0;
-    font-family: var(--primary-font);
-    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  color: #3f3f3f;
+  background-color: transparent;
+  background-clip: padding-box;
+  border: 1px solid #28a745;
+  border-radius: 0;
+  font-family: var(--primary-font);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
 .profileNav {
-    background: whitesmoke;
-    padding: 1.4rem;
-    margin-bottom: 1rem;
-    border-radius: 4px;
+  background: whitesmoke;
+  padding: 1.4rem;
+  margin-bottom: 1rem;
+  border-radius: 4px;
 }
 
 .profileNav li {
-    padding: 0rem 1rem 0rem 1rem;
-    text-decoration: none;
-    cursor: pointer;
-    color: var(--first-color);
+  padding: 0rem 1rem 0rem 1rem;
+  text-decoration: none;
+  cursor: pointer;
+  color: var(--first-color);
 }
 
 .profileNav li a {
-    text-decoration: none;
-    cursor: pointer;
-    font-size: 1rem;
-    font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
 }
 
 .profileNav .active a {
-    color: white;
+  color: white;
 }
 
 .profileNav .active {
-    background: var(--first-color);
-    padding: 2px 12px 2px 12px;
-    border-radius: 15px;
+  background: var(--first-color);
+  padding: 2px 12px 2px 12px;
+  border-radius: 15px;
 }
 
 .profTabs {
-    background: whitesmoke;
+  background: whitesmoke;
 }
 
 .usercard {
-    background: white;
-    border-radius: 5px;
+  background: white;
+  border-radius: 5px;
 }
 
 .usercard .userImg {
-    padding: 1rem 0rem 1rem 0rem;
-
+  padding: 1rem 0rem 1rem 0rem;
 }
 
 .usercard .userImg img {
-    width: 70px;
-    height: 70px;
-    border-radius: 50%;
-    margin-bottom: 1rem;
+  width: 70px;
+  height: 70px;
+  border-radius: 50%;
+  margin-bottom: 1rem;
 }
 
 .usercard h5 {
-    color: #000;
+  color: #000;
 }
 
 .usercard h6 {
-    color: #222;
-    display: inline-block;
-    font-family: var(--normal-font);
-    margin-top: 1rem;
-    font-weight: 900;
+  color: #222;
+  display: inline-block;
+  font-family: var(--normal-font);
+  margin-top: 1rem;
+  font-weight: 900;
 }
 
 .usercard span {
-    float: right;
-    color: #144a85;
-    margin-top: 1rem;
+  float: right;
+  color: #144a85;
+  margin-top: 1rem;
 }
 
 .accordion {
-    margin: 10px 0;
+  margin: 10px 0;
 }
 
 .accordion .item {
-    border: none;
-    margin-bottom: 10px;
-    background: none;
+  border: none;
+  margin-bottom: 10px;
+  background: none;
 }
 
 .t-p {
-    color: rgb(193 206 216);
-    padding: 40px 30px 0px 30px;
+  color: rgb(193 206 216);
+  padding: 40px 30px 0px 30px;
 }
 
 .accordion .item .item-header h2 button.btn.btn-link {
-    background: var(--first-color);
-    color: white;
-    border-radius: 0px;
-    font-family: "Poppins";
-    font-size: 16px;
-    font-weight: 400;
-    line-height: 2.5;
-    text-decoration: none;
+  background: var(--first-color);
+  color: white;
+  border-radius: 0px;
+  font-family: "Poppins";
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 2.5;
+  text-decoration: none;
 }
 
 .accordion .item .item-header {
-    border-bottom: none;
-    background: transparent;
-    padding: 0px;
-    margin: 2px;
+  border-bottom: none;
+  background: transparent;
+  padding: 0px;
+  margin: 2px;
 }
 
 .accordion .item .item-header h2 button {
-    color: white;
-    font-size: 20px;
-    padding: 15px;
-    display: block;
-    width: 100%;
-    text-align: left;
+  color: white;
+  font-size: 20px;
+  padding: 15px;
+  display: block;
+  width: 100%;
+  text-align: left;
 }
 
 .accordion .item .item-header h2 i {
-    float: right;
-    font-size: 30px;
-    color: white;
-    background-color: #1b693a;
-    width: 60px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 5px;
+  float: right;
+  font-size: 30px;
+  color: white;
+  background-color: #1b693a;
+  width: 60px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
 }
 
 button.btn.btn-link.collapsed i {
-    transform: rotate(0deg);
+  transform: rotate(0deg);
 }
 
 button.btn.btn-link i {
-    transform: rotate(180deg);
-    transition: 0.5s;
-}
-
-.steps {
-    margin-top: 2.5rem;
+  transform: rotate(180deg);
+  transition: 0.5s;
 }

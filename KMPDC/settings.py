@@ -78,6 +78,7 @@ INSTALLED_APPS = [
     'bootstrap5',
     'accounts',
     'jobs',
+    'myRequest',
 ]
 
 MIDDLEWARE = [

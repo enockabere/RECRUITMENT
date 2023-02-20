@@ -22,6 +22,8 @@ def profile_request(request):
         year = todays_date.year
         session = requests.Session()
         session.auth = config.AUTHS
+        
+        print(request.session['No_'])
 
         citizenship = config.O_DATA.format("/CountryRegion")
         countyCode = config.O_DATA.format("/QyCounties")
@@ -231,7 +233,7 @@ def FnApplicantDetails(request):
     postalAddress = ""
     postalCode = ""
     residentialAddress = ""
-    disabilityGrade = ''
+    disabilityGrade = 0
     if request.method == 'POST':
         try:
             firstName = request.POST.get('firstName')
@@ -464,30 +466,22 @@ def FnApplicantHobby(request):
 
 
 def FnApplicantReferee(request):
-    applicantNo = request.session['No_']
-    lineNo = 0
-    names = ""
-    company = ""
-    telephoneNo = ""
-    email = ""
-    myAction = "insert"
     if request.method == 'POST':
         try:
+            applicantNo = request.session['No_']
+            lineNo = 0
             names = request.POST.get('names')
             designation = request.POST.get('designation')
             company = request.POST.get('company')
             address = request.POST.get('address')
             telephoneNo = request.POST.get('telephoneNo')
             email = request.POST.get('email')
-        except ValueError:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('profile')
-        try:
+            myAction = "insert"
             response = config.CLIENT.service.FnApplicantReferee(
                 applicantNo, lineNo, names, designation, company, address, telephoneNo, email, myAction)
-            print(response)
-            messages.success(request, "Successfully Added.")
-            return redirect('profile')
+            if response == True:
+                messages.success(request, "Successfully Added.")
+                return redirect('profile')
         except Exception as e:
             messages.error(request, e)
             print(e)
