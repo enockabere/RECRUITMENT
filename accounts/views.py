@@ -1,132 +1,25 @@
 import base64
+import logging
 import threading
-from django.http import response
-from django.shortcuts import redirect, render, HttpResponse
+import aiohttp
+from django.shortcuts import redirect, render
 from django.conf import settings as config
 import json
+from django.views import View
 import requests
-from requests import Session
-from requests_ntlm import HttpNtlmAuth
 import datetime
-from datetime import date
+from datetime import datetime
 from django.contrib import messages
 from cryptography.fernet import Fernet
-import re
+from myRequest.views import UserObjectMixins
+import asyncio
+from asgiref.sync import sync_to_async
 import enum
+from django.http import JsonResponse
 # Create your views here.
 
 
-def profile_request(request):
-    try:
-        todays_date = date.today()
-        year = todays_date.year
-        session = requests.Session()
-        session.auth = config.AUTHS
-        
-        print(request.session['No_'])
-
-        citizenship = config.O_DATA.format("/CountryRegion")
-        countyCode = config.O_DATA.format("/QyCounties")
-        industry = config.O_DATA.format("/QyJobIndustries")
-        Qualification = config.O_DATA.format("/QyQualificationCodes")
-        ProfessionalBodies = config.O_DATA.format("/QyProfessionalBodies")
-        Study = config.O_DATA.format("/QyFieldsOfStudy")
-        Access_Point = config.O_DATA.format("/QyApplicants")
-        Qualifications = config.O_DATA.format(
-            "/QyApplicantAcademicQualifications")
-        Experience = config.O_DATA.format("/QyApplicantJobExperience")
-        Courses = config.O_DATA.format("/QyApplicantJobProfessionalCourses")
-        Memberships = config.O_DATA.format(
-            "/QyApplicantProfessionalMemberships")
-        Hobbies = config.O_DATA.format("/QyApplicantHobbies")
-        Referees = config.O_DATA.format("/QyApplicantReferees")
-        res = ""
-        My_Qualifications = []
-        My_Experience = []
-        My_Course = []
-        My_Membership = []
-        My_Hobby = []
-        My_Referees = []
-        try:
-            response = session.get(citizenship, timeout=10).json()
-            county_res = session.get(countyCode, timeout=10).json()
-            industry_res = session.get(industry, timeout=10).json()
-            Qualification_res = session.get(Qualification, timeout=10).json()
-            ProfessionalBodies_res = session.get(
-                ProfessionalBodies, timeout=10).json()
-
-            Study_res = session.get(Study, timeout=10).json()
-            App_response = session.get(Access_Point, timeout=10).json()
-            Qualifications_res = session.get(Qualifications, timeout=10).json()
-            Experience_res = session.get(Experience, timeout=10).json()
-            Courses_res = session.get(Courses, timeout=10).json()
-            Memberships_res = session.get(Memberships, timeout=10).json()
-            Hobbies_res = session.get(Hobbies, timeout=10).json()
-            Referees_Res = session.get(Referees, timeout=10).json()
-
-            for applicant in App_response['value']:
-                if applicant['No_'] == request.session['No_']:
-                    fullname = applicant['First_Name'] + \
-                        " " + applicant['Last_Name']
-
-                    request.session['username'] = fullname
-                    username = request.session['username']
-                    res = applicant
-            for Qualifications in Qualifications_res['value']:
-                if Qualifications['Applicant_No_'] == request.session['No_']:
-                    output_json = json.dumps(Qualifications)
-                    My_Qualifications.append(json.loads(output_json))
-            for Experience in Experience_res['value']:
-                if Experience['Applicant_No_'] == request.session['No_']:
-                    output_json = json.dumps(Experience)
-                    My_Experience.append(json.loads(output_json))
-            for course in Courses_res['value']:
-                if course['Applicant_No_'] == request.session['No_']:
-                    output_json = json.dumps(course)
-                    My_Course.append(json.loads(output_json))
-            for membership in Memberships_res['value']:
-                if membership['Applicant_No_'] == request.session['No_']:
-                    output_json = json.dumps(membership)
-                    My_Membership.append(json.loads(output_json))
-            for hobby in Hobbies_res['value']:
-                if hobby['No_'] == request.session['No_']:
-                    output_json = json.dumps(hobby)
-                    My_Hobby.append(json.loads(output_json))
-            for ref in Referees_Res['value']:
-                if ref['No'] == request.session['No_']:
-                    output_json = json.dumps(ref)
-                    My_Referees.append(json.loads(output_json))
-            country = response['value']
-            county = county_res['value']
-            ind = industry_res['value']
-            Quo = Qualification_res['value']
-            Pro = ProfessionalBodies_res['value']
-            FStudy = Study_res['value']
-        except requests.exceptions.ConnectionError as e:
-            print(e)
-
-        my_name = request.session['E_Mail']
-
-        todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
-        ctx = {"year": year, "country": country,
-               "county": county, "industry": ind,
-               "Quo": Quo, "Pro": Pro,
-               "Study": FStudy, "applicant": res,
-               "fullname": fullname, "Qualify": My_Qualifications,
-               "experience": My_Experience, "course": My_Course,
-               "membership": My_Membership, "hobby": My_Hobby,
-               "Referee": My_Referees, "today": todays_date,
-               "my_name": my_name}
-    except KeyError:
-        messages.error(request, "Session has expired, Login Again")
-        return redirect('login')
-
-    return render(request, 'profile.html', ctx)
-
-
 def login_request(request):
-    todays_date = date.today()
-    year = todays_date.year
     session = requests.Session()
     session.auth = config.AUTHS
 
@@ -150,8 +43,8 @@ def login_request(request):
                             applicant['Portal_Password'])
                         request.session['No_'] = applicant['No_']
                         request.session['E_Mail'] = applicant['E_Mail']
-                        applicant_no = request.session['No_']
-                        mail = request.session['E_Mail']
+                        request.session['full_name'] = applicant['First_Name'] + " " + applicant['Last_Name']
+
                     except Exception as e:
                         messages.error(request, e)
                         return redirect('login')
@@ -171,14 +64,11 @@ def login_request(request):
             messages.error(
                 request, "Invalid Credentials")
             return redirect('login')
-    ctx = {"year": year, "username": username}
+    ctx = { "username": username}
     return render(request, 'login.html', ctx)
 
 
 def register_request(request):
-    todays_date = date.today()
-    year = todays_date.year
-    email = ''
     password = ''
     confirm_password = ''
 
@@ -212,30 +102,15 @@ def register_request(request):
         except Exception as e:
             messages.error(request, e)
             print(e)
-    ctx = {"year": year}
+    ctx = {}
     return render(request, "register.html", ctx)
 
 
-def FnApplicantDetails(request):
-    applicantNo = request.session['No_']
-    firstName = ""
-    middleName = ""
-    lastName = ""
-    idNumber = ""
-    genders = ""
-    citizenship = ""
-    countyCode = ""
-    maritalStatus = ""
-    ethnicOrigin = ""
-    disabled = ""
-    dob = ""
-    phoneNumber = ""
-    postalAddress = ""
-    postalCode = ""
-    residentialAddress = ""
-    disabilityGrade = 0
-    if request.method == 'POST':
+class FnApplicantDetails(UserObjectMixins,View):
+    def post(self,request):
         try:
+            applicantNo = request.session['No_']
+            disabilityGrade = 0
             firstName = request.POST.get('firstName')
             middleName = request.POST.get('middleName')
             lastName = request.POST.get('lastName')
@@ -251,48 +126,193 @@ def FnApplicantDetails(request):
             postalAddress = request.POST.get('postalAddress')
             postalCode = request.POST.get('postalCode')
             residentialAddress = request.POST.get('residentialAddress')
-            disabilityGrade = int(request.POST.get('disabilityGrade'))
-        except ValueError:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
+            disabilityGrade = request.POST.get('disabilityGrade')
+            if not countyCode:
+                countyCode = ""
+                
+            if not disabilityGrade:
+                disabilityGrade = 0
+            class Data(enum.Enum):
+                values = genders
+            gender = (Data.values).value
+
+            response = self.make_soap_request('FnApplicantDetails',
+                                              applicantNo, firstName,
+                                                middleName, lastName,
+                                                    idNumber, gender,
+                                                        citizenship,
+                                                            countyCode, maritalStatus,
+                                                                ethnicOrigin, disabled, dob,
+                                                                    phoneNumber, postalAddress,
+                                                                        postalCode, residentialAddress,
+                                                                            int(disabilityGrade))
+            if response == True:
+                messages.success(request, "Successfully Added")
+                return redirect('profile')
+        except Exception as e:
+            messages.error(request, f'{e}')
+            logging.exception(e)
             return redirect('profile')
-    if not countyCode:
-        countyCode = " "
-
-    class Data(enum.Enum):
-        values = genders
-    gender = (Data.values).value
-    try:
-        response = config.CLIENT.service.FnApplicantDetails(applicantNo, firstName, middleName, lastName, idNumber, gender, citizenship,
-                                                            countyCode, maritalStatus, ethnicOrigin, disabled, dob, phoneNumber, postalAddress, postalCode, residentialAddress, disabilityGrade)
-        print(response)
-        messages.success(request, "Successfully Added.")
-        return redirect('profile')
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('profile')
 
 
-def JobExperience(request):
-    applicantNo = request.session['No_']
-    lineNo = 0
-    startDate = ""
-    endDate = ""
-    employer = ""
-    industry = ""
-    hierarchyLevels = ""
-    functionalArea = ""
-    jobTitle = ""
-    isPresentEmployment = ""
-    country = ""
-    description = ""
-    location = ""
-    employerEmail = ""
-    employerPostalAddress = ""
-    myAction = "insert"
-
-    if request.method == 'POST':
+class profile_request(UserObjectMixins, View):
+    async def get(self, request):
         try:
+            applicantNo = await sync_to_async(request.session.__getitem__)('No_')
+            full_name = await sync_to_async (request.session.__getitem__)('full_name')
+            personal_info = {}
+            country = []
+            tribes = []
+            Study = []
+            qualifications = []
+            ctx = {}
+            industry = []
+            Bodies = []
+
+            async with aiohttp.ClientSession() as session:
+                personal_details = asyncio.ensure_future(self.simple_one_filtered_data(session,
+                                                                                       '/QyApplicants',
+                                                                                       "No_", 'eq',
+                                                                                       applicantNo))
+                get_country = asyncio.ensure_future(self.simple_fetch_data(session,
+                                                                '/CountryRegion'))
+                # change this query to the one for tribes
+                get_tribes = asyncio.ensure_future(self.simple_fetch_data(session,
+                                                                    '/QyCounties'))
+                field_of_study = asyncio.ensure_future(self.simple_fetch_data(session,
+                                                                              '/QyFieldsOfStudy'))
+                
+                qualifications = asyncio.ensure_future(self.simple_fetch_data(session,
+                                                                              '/QyQualificationCodes'))
+                
+                job_industries = asyncio.ensure_future(self.simple_fetch_data(session,
+                                                                            '/QyJobIndustries'))
+                
+                pro_bodies = asyncio.ensure_future(self.simple_fetch_data(session,
+                                                                          '/QyProfessionalBodies'))
+                
+                response = await asyncio.gather(personal_details,get_country,
+                                                get_tribes,field_of_study,qualifications,
+                                                    job_industries,pro_bodies)
+                
+                for data in response[0]:
+                    personal_info = data
+                country =[country for country in response[1]]
+                tribes = [tribe for tribe in response[2]]
+                Study = [study for study in response[3]]
+                qualifications = [qualification for qualification in response[4]]
+                industry = [industry for industry in response[5]]
+                Bodies = [body for body in response[6]]
+
+            ctx = {
+                "applicant": personal_info,
+                "country": country,
+                'tribes':tribes,
+                'qualifications':qualifications,
+                'Study':Study,
+                'industry':industry,
+                'pro_bodies':Bodies,
+                "my_name": full_name,
+            }
+
+        except KeyError:
+            messages.error(request, "Session has expired, Login Again")
+            return redirect('login')
+        except Exception as e:
+            messages.error(request, f'{e}')
+            print(e)
+            return redirect('dashboard')
+        return render(request, 'profile.html', ctx)
+    
+class Counties(UserObjectMixins,View):
+    def get(self,request):    
+        try:
+            counties = self.get_object('/QyCounties')
+            return JsonResponse(counties, safe=False)
+
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, safe=False)
+        
+class AcademicQualifications(UserObjectMixins,View):
+    def get(self,request):    
+        try:
+            Applicant_No_ = request.session['No_']
+            qualifications = self.one_filter('/QyApplicantAcademicQualifications',
+                                                'Applicant_No_',"eq",Applicant_No_)
+           
+            return JsonResponse(qualifications, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, safe=False)
+
+class QyApplicantJobExperience(UserObjectMixins,View):
+    def get(self,request):    
+        try:
+            Applicant_No_ = request.session['No_']
+            experience = self.one_filter('/QyApplicantJobExperience',
+                                                'Applicant_No_',"eq",Applicant_No_)
+            
+            return JsonResponse(experience, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, safe=False)
+        
+class QyApplicantJobProfessionalCourses(UserObjectMixins,View):
+    def get(self,request):    
+        try:
+            Applicant_No_ = request.session['No_']
+            pro_courses = self.one_filter('/QyApplicantJobProfessionalCourses',
+                                                'Applicant_No_',"eq",Applicant_No_)
+                        
+            return JsonResponse(pro_courses, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, safe=False)
+class QyApplicantProfessionalMemberships(UserObjectMixins,View):
+    def get(self,request):    
+        try:
+            Applicant_No_ = request.session['No_']
+            pro_memberships = self.one_filter('/QyApplicantProfessionalMemberships',
+                                                'Applicant_No_',"eq",Applicant_No_)
+                        
+            return JsonResponse(pro_memberships, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, safe=False)
+        
+class QyApplicantHobbies(UserObjectMixins,View):
+    def get(self,request):    
+        try:
+            Applicant_No_ = request.session['No_']
+            hobbies = self.one_filter('/QyApplicantHobbies',
+                                                'No_',"eq",Applicant_No_)
+                        
+            return JsonResponse(hobbies, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, safe=False)
+        
+class QyApplicantReferees(UserObjectMixins,View):
+    def get(self,request):    
+        try:
+            Applicant_No_ = request.session['No_']
+            referees = self.one_filter('/QyApplicantReferees',
+                                                'No',"eq",Applicant_No_)
+                        
+            return JsonResponse(referees, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, safe=False)
+
+
+class JobExperience(UserObjectMixins,View):
+    def post(self,request):
+        try:
+            applicantNo = request.session['No_']
+            lineNo = 0
+            myAction = "insert"
+            startDate  = datetime.strptime(request.POST.get('startDate'), '%Y-%m-%d').date()
             startDate = request.POST.get('startDate')
             endDate = request.POST.get('endDate')
             employer = request.POST.get('employer')
@@ -306,73 +326,57 @@ def JobExperience(request):
             location = request.POST.get('location')
             employerEmail = request.POST.get('employerEmail')
             employerPostalAddress = request.POST.get('employerPostalAddress')
-        except ValueError:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('profile')
+            
+            if not endDate:
+                endDate = '0001-01-01'
+                
+            endDate = datetime.strptime(endDate, '%Y-%m-%d').date()
 
-    class Data(enum.Enum):
-        values = hierarchyLevels
+            class Data(enum.Enum):
+                values = hierarchyLevels
 
-    hierarchyLevel = (Data.values).value
-    try:
-        response = config.CLIENT.service.FnApplicantJobExperience(applicantNo, lineNo, startDate, endDate, employer, industry, hierarchyLevel, functionalArea, jobTitle,
-                                                                  isPresentEmployment, country, description, location, employerEmail, employerPostalAddress, myAction)
-        print(response)
-        messages.success(request, "Successfully Added.")
-        return redirect('profile')
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('profile')
+            hierarchyLevel = (Data.values).value
+            response = self.make_soap_request('FnApplicantJobExperience',
+                                              applicantNo, lineNo, startDate,
+                                                    endDate, employer, industry, hierarchyLevel, 
+                                                    functionalArea, jobTitle,
+                                                        isPresentEmployment, country, description,
+                                                        location, employerEmail, 
+                                                        employerPostalAddress,
+                                                        myAction)
+            return JsonResponse(response, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, safe=False)
 
 
-def FnApplicantProfessionalCourse(request):
-    applicantNo = request.session['No_']
-    lineNo = 0
-    qualificationCode = ""
-    sectionLevel = ""
-    myAction = "insert"
-    otherQualification = ''
-    if request.method == 'POST':
+class FnApplicantProfessionalCourse(UserObjectMixins,View):
+    def post(self,request):
         try:
             qualificationCode = request.POST.get('qualificationCode')
             sectionLevel = int(request.POST.get('sectionLevel'))
             otherQualification = request.POST.get('otherQualification')
-        except ValueError:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('profile')
-        try:
-            response = config.CLIENT.service.FnApplicantProfessionalCourse(
-                applicantNo, lineNo, qualificationCode, sectionLevel, myAction, otherQualification)
-            print(response)
-            messages.success(request, "Successfully Added.")
-            return redirect('profile')
+            applicantNo = request.session['No_']
+            lineNo = 0
+            myAction = "insert"
+            if not otherQualification:
+                otherQualification = ''
+
+            response = self.make_soap_request('FnApplicantProfessionalCourse',
+                            applicantNo, lineNo, qualificationCode, sectionLevel,
+                            myAction, otherQualification)
+            return JsonResponse(response, safe=False)
         except Exception as e:
-            messages.error(request, e)
             print(e)
-    return redirect('profile')
+            return JsonResponse({'error': str(e)}, safe=False)
 
 
-def FnApplicantAcademicQualification(request):
-    applicantNo = request.session['No_']
-    lineNo = 0
-    startDate = ""
-    endDate = ""
-    educationTypes = ""
-    educationLevels = ""
-    fieldOfStudy = ""
-    qualificationCode = ""
-    institutionName = ""
-    proficiencyLevels = ""
-    country = ""
-    region = ""
-    isHighestLevel = ""
-    description = ""
-    grade = ""
-    myAction = "insert"
-    otherQualification = ""
-    if request.method == 'POST':
+class FnApplicantAcademicQualification(UserObjectMixins,View):
+    def post(self,request):
         try:
+            applicantNo = request.session['No_']
+            lineNo = 0
+            myAction = "insert"
             startDate = request.POST.get('startDate')
             endDate = request.POST.get('endDate')
             educationTypes = request.POST.get('educationType')
@@ -382,110 +386,94 @@ def FnApplicantAcademicQualification(request):
             institutionName = request.POST.get('institutionName')
             proficiencyLevels = request.POST.get('proficiencyLevel')
             country = request.POST.get('country')
-            region = request.POST.get('region')
             isHighestLevel = request.POST.get('isHighestLevel')
             description = request.POST.get('description')
             grade = request.POST.get('grade')
             otherQualification = request.POST.get('otherQualification')
-        except ValueError:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('profile')
 
-        class Data(enum.Enum):
-            values = educationTypes
-            education = educationLevels
-            proficiency = proficiencyLevels
+            class Data(enum.Enum):
+                values = educationTypes
+                education = educationLevels
+                proficiency = proficiencyLevels
 
-        educationType = (Data.values).value
-        educationLevel = (Data.education).value
-        proficiencyLevel = (Data.proficiency).value
+            educationType = (Data.values).value
+            educationLevel = (Data.education).value
+            proficiencyLevel = (Data.proficiency).value
 
-        try:
-            response = config.CLIENT.service.FnApplicantAcademicQualification(applicantNo, lineNo, startDate, endDate, educationType, educationLevel, fieldOfStudy, qualificationCode, institutionName,
-                                                                              proficiencyLevel, country, region, isHighestLevel, description, grade, myAction, otherQualification)
-            print(response)
-            messages.success(request, "Successfully Added.")
-            return redirect('profile')
+            response = self.make_soap_request('FnApplicantAcademicQualification',
+                                                applicantNo, lineNo, startDate,
+                                                    endDate, educationType, educationLevel, 
+                                                        fieldOfStudy, qualificationCode, institutionName,
+                                                            proficiencyLevel, country, isHighestLevel,
+                                                                description, grade, myAction, otherQualification)
+
+            return JsonResponse({'response':response})
         except Exception as e:
-            messages.error(request, e)
-            print(e)
-    return redirect('profile')
+            messages.error(request, f'{e}')
+            logging.exception(e)
+            return redirect('profile')
 
 
-def FnApplicantProfessionalMembership(request):
-    applicantNo = request.session['No_']
-    lineNo = 0
-    professionalBody = ""
-    membershipNo = ""
-    myAction = "insert"
-    otherProfessionalBody = ''
-    if request.method == 'POST':
+class FnApplicantProfessionalMembership(UserObjectMixins,View):
+    def post(self,request):
         try:
+            applicantNo = request.session['No_']
+            lineNo = 0
+            myAction = "insert"
             professionalBody = request.POST.get('professionalBody')
             membershipNo = request.POST.get('membershipNo')
             otherProfessionalBody = request.POST.get('otherProfessionalBody')
-        except ValueError:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('profile')
+            
+            if not otherProfessionalBody:
+                otherProfessionalBody = ''
 
-        try:
-            response = config.CLIENT.service.FnApplicantProfessionalMembership(
-                applicantNo, lineNo, professionalBody, membershipNo, myAction, otherProfessionalBody)
+            response = self.make_soap_request('FnApplicantProfessionalMembership',
+                                    applicantNo, lineNo, professionalBody, membershipNo,
+                                    myAction, otherProfessionalBody)
             print(response)
-            messages.success(request, "Successfully Added.")
-            return redirect('profile')
+            return JsonResponse(response, safe=False)
         except Exception as e:
-            messages.error(request, e)
             print(e)
-    return redirect('profile')
+            return JsonResponse({'error': str(e)}, safe=False)
 
 
-def FnApplicantHobby(request):
-    applicantNo = request.session['No_']
-    lineNo = 0
-    hobby = ""
-    myAction = "insert"
-    if request.method == 'POST':
+class FnApplicantHobby(UserObjectMixins,View):
+    def post(self,request):
         try:
+            applicantNo = request.session['No_']
+            lineNo = 0
+            myAction = "insert"
             hobby = request.POST.get('hobby')
 
-        except ValueError:
-            messages.error(request, "Not sent. Invalid Input, Try Again!!")
-            return redirect('profile')
-
-    try:
-        response = config.CLIENT.service.FnApplicantHobby(
-            applicantNo, lineNo, hobby, myAction)
-        print(response)
-        messages.success(request, "Successfully Added.")
-        return redirect('profile')
-    except Exception as e:
-        messages.error(request, e)
-        print(e)
-    return redirect('profile')
+            response = self.make_soap_request('FnApplicantHobby',
+                applicantNo, lineNo, hobby, myAction)
+            print(response)
+            return JsonResponse(response, safe=False)
+        except Exception as e:
+            print(e)
+            return JsonResponse({'error': str(e)}, safe=False)
 
 
-def FnApplicantReferee(request):
-    if request.method == 'POST':
+class FnApplicantReferee(UserObjectMixins,View):
+    def post(self,request):
         try:
             applicantNo = request.session['No_']
             lineNo = 0
             names = request.POST.get('names')
             designation = request.POST.get('designation')
             company = request.POST.get('company')
-            address = request.POST.get('address')
             telephoneNo = request.POST.get('telephoneNo')
             email = request.POST.get('email')
             myAction = "insert"
-            response = config.CLIENT.service.FnApplicantReferee(
-                applicantNo, lineNo, names, designation, company, address, telephoneNo, email, myAction)
-            if response == True:
-                messages.success(request, "Successfully Added.")
-                return redirect('profile')
+            response = self.make_soap_request('FnApplicantReferee',
+                            applicantNo, lineNo, names, designation,
+                            company, telephoneNo, email, myAction)
+            
+            return JsonResponse(response, safe=False)
         except Exception as e:
-            messages.error(request, e)
             print(e)
-    return redirect('profile')
+            return JsonResponse({'error': str(e)}, safe=False)
+
 
 
 def logout(request):

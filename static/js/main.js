@@ -4,12 +4,13 @@ var popoverTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggl
 var popoverList = popoverTriggerList.map(function (popoverTriggerEl) {
     return new bootstrap.Popover(popoverTriggerEl)
 })
-
 $(document).ready(function () {
-    var table = $('#example').DataTable({
-        responsive: true
+    $('table.display').DataTable({
+        "pageLength": 5,
+        "order": [
+            [0, "desc"]
+        ]
     });
-    // new $.fn.dataTable.FixedHeader(table);
 });
 
 const nxtBtn = document.querySelector('#submitBtn');

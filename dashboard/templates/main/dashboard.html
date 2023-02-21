@@ -6,27 +6,24 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/simplePagination.js/1.6/jquery.simplePagination.min.js"></script>
 <section>
     <div class="content-wrapper general-bg" style="padding-bottom: 1rem ">
+        {% include 'alerts.html' %}
         <div class="row">
             <div class="col-md-12">
                 <button class="btn p-3 align-items-center text-white dateBtn" type="button"
                     style="display: inline-block;background: #144a85;">
                     <i class="mdi mdi-calendar mr-1"></i>{{today}}
                 </button>
-                <div class="toast show toast align-items-center text-white  border-0 homeToast" role="alert"
-                    aria-live="assertive" aria-atomic="true"
-                    style="margin-left: auto;margin-right:0;margin-top: -2.7rem;background: #144a85;">
-                    <div class="toast-header">
-                        <i class="las la-bell"></i>
-                        <strong class="me-auto">Reminder</strong>
-                        <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-                    </div>
-                    <div class="toast-body">
-                        Update your <a href="{% url 'profile' %}" class="text-warning">profile</a> information
-                        before
-                        applying for
-                        any of our Jobs
-                    </div>
-                </div>
+                <script>
+                    iziToast.show({
+                        theme: 'dark',
+                        icon: 'las la-exclamation-triangle',
+                        title: 'Hello',
+                        message: 'Update your profile information before applying for any of our Jobs',
+                        position: 'topRight',
+                        progressBarColor: 'rgb(0, 255, 184)',
+
+                    });
+                </script>
             </div>
         </div>
         <div class="row my-4">

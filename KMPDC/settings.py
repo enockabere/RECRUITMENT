@@ -12,7 +12,6 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
-import django_heroku
 import dj_database_url
 from decouple import config, Csv
 import requests
@@ -176,11 +175,11 @@ WHITENOISE_MANIFEST_STRICT = False
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-django_heroku.settings(locals())
-
 AUTHS = Session()
 
 WEB_SERVICE_PWD = 'W3C0d3@llD@y'
+WEB_SERVICE_UID = 'EMAEBA'
+
 BASE_URL = 'http://20.121.189.145:7047/KMPDC/WS/KMPDC/Codeunit/CuRecruitmentWebPortal'
 O_DATA = "http://20.121.189.145:7048/KMPDC/ODataV4/Company(%27KMPDC%27){}"
 AUTHS.auth = HTTPBasicAuth('EMAEBA', WEB_SERVICE_PWD)
