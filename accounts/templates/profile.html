@@ -37,7 +37,8 @@
                                 <i class="las la-briefcase"></i>
                                 <br>
                                 <span>Work Experience</span>
-                            </label></li>
+                            </label>
+                        </li>
                         <li title="Professional Courses">
                             <label for="tab4" role="button">
                                 <i class="las la-award"></i>
@@ -48,7 +49,8 @@
                         <li title="Professional Memberships">
                             <label for="tab5" role="button">
                                 <i class="las la-user-graduate"></i>
-                                <br>Professional Memberships</span>
+                                <br>
+                                <span>Professional Memberships</span>
                             </label>
                         </li>
                         <li title="Hobbies">
@@ -56,7 +58,8 @@
                                 <i class="las la-briefcase"></i>
                                 <br>
                                 <span>Hobbies</span>
-                            </label></li>
+                            </label>
+                        </li>
                         <li title="Referees">
                             <label for="tab7" role="button">
                                 <i class="las la-award"></i>
@@ -111,6 +114,8 @@
                                             {% elif applicant.Gender == 'Female' %}
                                             <option value="2" selected>Female</option>
                                             {% endif %}
+                                            <option selected disabled value="0">
+                                                --select--</option>
                                             <option value="1">Male</option>
                                             <option value="2">Female</option>
                                         </select>
@@ -128,14 +133,30 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-4">
+                                <div class="row" id="countyRow" style="display:none">
+                                    <div class="col-md-6">
                                         <label class="form-label">County</label>
                                         <select class="form-select" id="county" name="countyCode" disabled>
-                                            <option class="after" value="{{applicant.County_Code}}">
-                                                {{applicant.County_Code}}</option>
+                                            <option selected disabled value="0">
+                                                --select--</option>
+                                            {% for county in county %}
+                                            <option value="{{county.CountyCode}}">{{county.Description}}</option>
+                                            {% endfor %}
                                         </select>
                                     </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Ethnic Origin</label>
+                                        <select class="form-select" name="ethnicOrigin" id="ethnicOrigin" disabled>
+                                            <option selected disabled value="0">
+                                                --select--</option>
+                                            {% for tribe in tribes %}
+                                            <option value="{{tribe.No}}">
+                                                {{tribe.Name}}</option>
+                                            {% endfor %}
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row">
                                     <div class="col-md-4">
                                         <label class="form-label">Marital Status</label>
                                         <select class="form-select" name="maritalStatus" required>
@@ -181,19 +202,24 @@
                                             <option value="3">Separated</option>
                                             <option value="4">Divorced</option>
                                             <option value="5">Widow(er)</option>
+                                            {% else %}
+                                            <option selected disabled value="0">
+                                                --select--</option>
+                                            <option value="1">Single</option>
+                                            <option value="2">Married</option>
+                                            <option value="3">Separated</option>
+                                            <option value="4">Divorced</option>
+                                            <option value="5">Widow(er)</option>
+                                            <option value="6">Other</option>
                                             {% endif %}
                                         </select>
                                     </div>
                                     <div class="col-md-4">
-                                        <label class="form-label">Ethnic Origin</label>
-                                        <select class="form-select" name="ethnicOrigin" required>
-                                            <option selected value="1">
-                                                {{applicant.Ethnic_Origin}}</option>
-                                        </select>
+                                        <label for="" class="form-label">Date of Birth</label>
+                                        <input type="date" name="dob" class="form-control"
+                                            value="{{applicant.Date_Of_Birth}}" required>
                                     </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <label class="form-label">Disabled</label>
                                         <select class="form-select" name="disabled" id="disabled" required>
                                             {% if applicant.Disabled == 'Yes' %}
@@ -201,18 +227,13 @@
                                             <option value="0">No</option>
                                             {% elif applicant.Disabled == 'No' %}
                                             <option selected value="0">No</option>
-                                            <<option value="1">Yes</option>
-                                                {% else %}
-                                                <option selected value="0">--select--</option>
-                                                <option value="0">No</option>
-                                                <option value="1">Yes</option>
-                                                {% endif %}
+                                            <option value="1">Yes</option>
+                                            {% else %}
+                                            <option selected value="0">--select--</option>
+                                            <option value="0">No</option>
+                                            <option value="1">Yes</option>
+                                            {% endif %}
                                         </select>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <label for="" class="form-label">Date of Birth</label>
-                                        <input type="date" name="dob" class="form-control"
-                                            value="{{applicant.Date_Of_Birth}}" required>
                                     </div>
                                 </div>
                                 <div class="row hiddenRow">
@@ -390,9 +411,9 @@
                                 style="width:100%">
                                 <thead>
                                     <tr id="tops">
-                                        <th id="long">Start_Date</th>
+                                        <th id="long">Start Date</th>
                                         <th>End Date</th>
-                                        <th>Education_Type</th>
+                                        <th>Education Type</th>
                                         <th>Education Level</th>
                                         <th>Qualification Name</th>
                                     </tr>
@@ -400,6 +421,11 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -470,8 +496,13 @@
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Functional Area</label>
-                                        <input type="text" class="form-control" name="functionalArea"
-                                            id="job_functionalArea" required>
+                                        <select class="form-select" id="job_functionalArea" name="functionalArea"
+                                            required>
+                                            <option selected disabled value="">Choose...</option>
+                                            {% for area in functional_areas %}
+                                            <option value="{{area.Code}}">{{area.Description}}</option>
+                                            {% endfor %}
+                                        </select>
                                     </div>
                                     <div class="col-md-4">
                                         <label class="form-label">Country</label>
@@ -522,7 +553,7 @@
                                 style="width:100%">
                                 <thead>
                                     <tr id="tops">
-                                        <th id="long">Start_Date</th>
+                                        <th id="long">Start Date</th>
                                         <th>End Date</th>
                                         <th>Employer</th>
                                         <th>Job Title</th>
@@ -531,6 +562,11 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -594,13 +630,14 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </section>
                         <section>
                             <h2 class="my-4 text-center mx-auto">Professional Memberships</h2>
-                            <h2>Returns</h2>
                             <form method="post" id="professionalBodyForm">
                                 {% csrf_token %}
                                 <div class="row">
@@ -651,6 +688,9 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -683,6 +723,7 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -739,6 +780,11 @@
                                 </thead>
                                 <tbody>
                                     <tr>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
+                                        <td></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -753,19 +799,48 @@
     const nextBtn = document.getElementById("nextBtn");
     const prevBtn = document.getElementById("prevBtn");
     const tabs = document.querySelectorAll(".tabs > input");
+    const lastTab = tabs.length - 1;
     let currentTab = 0;
+
+    function showHideNextBtn() {
+        if (currentTab === lastTab) {
+            nextBtn.style.display = "none";
+        } else {
+            nextBtn.style.display = "";
+        }
+    }
+
+    function showHidePrevBtn() {
+        if (currentTab === 0) {
+            prevBtn.style.display = "none";
+        } else {
+            prevBtn.style.display = "";
+        }
+    }
+
+    showHideNextBtn();
+    showHidePrevBtn();
 
     nextBtn.addEventListener("click", function () {
         currentTab++;
-        if (currentTab >= tabs.length) currentTab = 0;
+        if (currentTab > lastTab) {
+            currentTab = 0;
+        }
         tabs[currentTab].checked = true;
+        showHideNextBtn();
+        showHidePrevBtn();
     });
 
     prevBtn.addEventListener("click", function () {
         currentTab--;
-        if (currentTab < 0) currentTab = tabs.length - 1;
+        if (currentTab < 0) {
+            currentTab = lastTab;
+        }
         tabs[currentTab].checked = true;
+        showHideNextBtn();
+        showHidePrevBtn();
     });
+
 
     function loadAcademicData() {
         $.ajax({
@@ -940,6 +1015,25 @@
     }
     //Disability Jquery
     $(document).ready(function () {
+        $('#countyRow').hide();
+
+        // Attach a change event listener to the country select
+        $('#country').on('change', function () {
+            // Get the selected value
+            var selectedValue = $(this).val();
+
+            // If the selected value is 'KE', show the county row and enable the county select
+            if (selectedValue === 'KE') {
+                $('#countyRow').show(1000);
+                $('#county').prop('disabled', false);
+                $('#ethnicOrigin').prop('disabled', false);
+            } else {
+                // Otherwise, hide the county row and disable the county select
+                $('#countyRow').hide(500);
+                $('#county').prop('disabled', true);
+                $('#ethnicOrigin').prop('disabled', true);
+            }
+        });
 
         loadAcademicData();
         loadExperienceData();
@@ -971,6 +1065,7 @@
         // DOB End
         var disabledSelect = $('#disabled');
         var disabilityInput = $('#disability');
+        $('.hiddenRow').hide();
 
 
         // Check initial value of the select on page load
@@ -983,45 +1078,12 @@
         disabledSelect.on('change', function () {
             if (this.value === '1') {
                 disabilityInput.prop('disabled', false);
-                $('.hiddenRow').show();
+                $('.hiddenRow').show(1000);
             } else {
                 disabilityInput.prop('disabled', true);
+                $('.hiddenRow').hide(500);
             }
         });
-        $('#country').on('change', function (e) {
-            e.preventDefault();
-            var countryCode = $("#country").val();
-            if (countryCode != null) {
-                $("#FnApplicantDetails select[name='countyCode']").find('.after').nextAll().remove();
-                $.ajax({
-                    type: 'get',
-                    url: '{% url "Counties" %}',
-                    dataType: 'json',
-                    data: {
-                        countryCode: countryCode
-                    },
-                    success: function (response) {
-                        let options = '';
-                        for (var i = 0; i < response.value.length; i++) {
-                            options += '<option value=' + response.value[i]
-                                .CountyCode + '>' + response.value.Description +
-                                '</option>';
-                        }
-                        $('#county').prop('disabled', false);
-                        $("#FnApplicantDetails select[name='countyCode']").find('.after')
-                            .after(
-                                options);
-
-                    },
-                    error: function (response) {
-                        console.log('Something went wrong');
-                    }
-                });
-            } else {
-                $("#FnApplicantDetails select[name='countyCode']").find('.after').nextAll().remove();
-            }
-        });
-        //Education
 
         // Academic Qualification JS
         $('#AcademicQualificationCode').on('change', function () {

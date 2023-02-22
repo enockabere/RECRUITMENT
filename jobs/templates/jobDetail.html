@@ -4,10 +4,6 @@
 {% block main %}
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"
     integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
-<script src="https://unpkg.com/dropzone@5/dist/min/dropzone.min.js"></script>
-<link rel="stylesheet" href="https://unpkg.com/dropzone@5/dist/min/dropzone.min.css" type="text/css" />
-
 <style>
     #specialist-dropzone {
         background: white;
@@ -24,46 +20,16 @@
         <div class="d-xl-flex justify-content-between align-items-start">
             <h2 class="text-dark font-weight-bold mb-2"> {{res.Description}} Position
             </h2>
-            <div class="d-sm-flex justify-content-xl-between align-items-center mb-2">
-                <div class="dropdown ml-0 ml-md-4 mt-2 mt-lg-0">
-                    <button class="btn bg-white dropdown-toggle p-3 d-flex align-items-center" type="button"
-                        id="dropdownMenuButton1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
-                            class="mdi mdi-calendar mr-1"></i>{{today}}
-                    </button>
-                </div>
+            <div class="d-sm-flex justify-content-end align-items-center mb-2">
+
+                <button class="btn bg-white align-items-center" type="button" id="dropdownMenuButton1"
+                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i
+                        class="mdi mdi-calendar mr-1"></i>{{today}}
+                </button>
             </div>
         </div>
         <!--alert -->
-        {% if messages %}
-        {% for message in messages %}
-        {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
-        <div class="alert alert-success d-flex align-items-center alert-dismissible alert-success" role="alert">
-            <i class="las la-check-double" style="color: white;font-size: 2rem"></i>
-            <div class="a-icon mx-2">
-                {{message}}
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-        <div class="alert alert-danger d-flex align-items-center alert-dismissible alert-warn" role="alert">
-            <i class="las la-exclamation-triangle" style="color: white;font-size: 2rem"></i>
-            <div class="a-icon mx-2">
-                {{message}}
-            </div>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endif %}
-        {% endfor %}
-        {% endif %}
-        <div class="alert alert-secondary alert-dismissible fade show" role="alert">
-            <p>
-                Make sure to attach all the required documents/attachments under required
-                attachments tab.
-
-            </p>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-
+        {% include 'alerts.html' %}
         <div class="row my-3">
             <div class="col-md-3">
                 <div class="card l-bg-cherry statCard h-100">
@@ -134,6 +100,44 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <form class="bg-white p-3" action="{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}" method="POST"
+                    enctype="multipart/form-data" novalidate>
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <label class="form-label">Select Attachment</label>
+                            <select class="form-select" name="fileName" required>
+                                <option selected disabled value="">Choose...</option>
+                                {% for attach in Attach %}
+                                {% with attachment_exists=False %}
+                                {% for attached in second_list %}
+                                {% if attached.File_Name == attach.Attachment %}
+                                {% with attachment_exists=True %}
+                                {% endwith %}
+                                {% endif %}
+                                {% endfor %}
+                                {% if not attachment_exists %}
+                                <option value="{{ attach.Attachment }}">{{ attach.Description }}</option>
+                                {% endif %}
+                                {% endwith %}
+                                {% empty %}
+                                <option value="0">Job has no Attachments</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row" id="attachment-row" style="display: none;">
+                        <div class="col-md-12">
+                            <label class="form-label">Attachment</label>
+                            <input type="file" class="form-control" id="" name="attachment">
+                            <button type="submit" class="btn btn-primary w-100 my-3">Submit</button>
+                        </div>
+                    </div>
+                </form>
             </div>
         </div>
         <div class="row mt-5">
@@ -447,72 +451,46 @@
                             </div>
                         </div>
                     </div>
-
-                    <button class="btn btn-primary btn-lg my-3" type="button" data-bs-toggle="modal"
-                        data-bs-target="#attached" style="width:100%"> Required Attachments <i
-                            class="las la-file-upload"></i></button>
                 </div>
-
             </div>
         </div>
     </div>
 </section>
 
 <!-- Modal -->
-<div class="modal fade" id="attached" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-    aria-labelledby="staticBackdropLabel" aria-hidden="true">
+<div class="modal fade" id="attachedCv" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
+    aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Documents</h5>
+                <h5 class="modal-title" id="staticBackdropLabel">Upload Curriculum Vitae</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <p class="text-dark">Select and Upload the following Attachments all at once/Separately. </p>
-
-                <ol>
-                    {% for res in Attach %}
-                    <li>{{res.Description}}</li>
-                    {% endfor %}
-                </ol>
-                <form action="{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}" class="dropzone dz"
-                    id="specialist-dropzone" method="post" enctype="multipart/form-data">
+                <form action="{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}" method="post" class="myForm"
+                    enctype="multipart/form-data">
                     {% csrf_token %}
-                    <div class="fallback">
-                        <input name="file" class="form-control" name="attachment" type="file" multiple />
-                        <button type="submit" class="btn br-primary">Submit</button>
+                    <div class=" mb-3">
+                        <label class="form-label">Attachment</label>
+                        <input class="form-control" name="attachment" type="file">
                     </div>
+                    <button type="submit" class="button-88 my-3 w-100">Submit <i
+                            class="las la-arrow-right submit-icon"></i></button>
                 </form>
-
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
             </div>
         </div>
     </div>
 </div>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    Dropzone.autoDiscover = false;
-    const myDropzone = new Dropzone('#specialist-dropzone', {
-        url: "{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}",
-        method: "post",
-        paramName: "attachment",
-        maxFiles: 10,
-        acceptedFiles: ".doc,.doc,.pdf",
-        clickable: true,
-        maxFilesize: 100,
-        dictDefaultMessage: "Click or Drag and Drop files here to upload",
-        dictFallbackMessage: "Your browser does not support drag and drop file uploads.",
-        dictFallbackText: "Please use the fallback form below to upload your files.",
-        dictResponseError: "Server responded with {{statusCode}} code.",
-        dictCancelUpload: "Cancel upload",
-        dictCancelUploadConfirmation: "Are you sure you want to cancel this upload?",
-        dictRemoveFile: "Remove",
-        dictRemoveFileConfirmation: null,
-        dictMaxFilesExceeded: "You can only upload {{maxFiles}} files.",
-    })
+    $(document).ready(function () {
+        $('select[name="fileName"]').change(function () {
+            if ($(this).val()) {
+                $('#attachment-row').show(1000);
+            } else {
+                $('#attachment-row').hide(1000);
+            }
+        });
+    });
 </script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"
-    integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
 {% endblock %}

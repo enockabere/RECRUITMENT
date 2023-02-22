@@ -562,7 +562,7 @@ button.btn.btn-link i {
 .tabs
   input[name="tab-control"]:nth-of-type(6):checked
   ~ ul
-  > li:nth-child(4)
+  > li:nth-child(6)
   > label {
   cursor: default;
   color: #428bff;
@@ -571,7 +571,7 @@ button.btn.btn-link i {
 .tabs
   input[name="tab-control"]:nth-of-type(6):checked
   ~ ul
-  > li:nth-child(4)
+  > li:nth-child(6)
   > label
   svg {
   fill: #428bff;
@@ -581,7 +581,7 @@ button.btn.btn-link i {
   .tabs
     input[name="tab-control"]:nth-of-type(6):checked
     ~ ul
-    > li:nth-child(4)
+    > li:nth-child(6)
     > label {
     background: rgba(0, 0, 0, 0.08);
   }

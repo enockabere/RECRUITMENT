@@ -9,14 +9,10 @@
         {% include 'alerts.html' %}
         <div class="row">
             <div class="col-md-12">
-                <button class="btn p-3 align-items-center text-white dateBtn" type="button"
-                    style="display: inline-block;background: #144a85;">
-                    <i class="mdi mdi-calendar mr-1"></i>{{today}}
-                </button>
                 <script>
                     iziToast.show({
                         theme: 'dark',
-                        icon: 'las la-exclamation-triangle',
+                        icon: 'las la-bell',
                         title: 'Hello',
                         message: 'Update your profile information before applying for any of our Jobs',
                         position: 'topRight',
@@ -26,8 +22,8 @@
                 </script>
             </div>
         </div>
-        <div class="row my-4">
-            <div class="col-md-6 my-2">
+        <div class="row mb-2">
+            <div class="col-md-6">
                 <div class="card text-white h-100 d-card"
                     style="background:linear-gradient(to right, #444a4a, #0275d8) !important; border: none;">
                     <div class="card-body">
@@ -42,7 +38,7 @@
                     </div>
                 </div>
             </div>
-            <div class="col-md-6 my-2">
+            <div class="col-md-6">
                 <div class="card text-white  h-100 d-card"
                     style="background: linear-gradient(to right, #a86008, #c18b39) !important;border: none;">
                     <div class="card-body">
@@ -59,68 +55,46 @@
             </div>
         </div>
         <div class="row mb-2">
-            <div class="card" id="home">
-                <h4 class="mt-2 card-title text-dark">Open Jobs List</h4>
-                <div class="card-body">
-                    <table id="example" class="table table-striped table-bordered dt-responsive table-responsive-lg"
-                        style="width:100%">
-                        <thead>
-                            <tr id="tops">
-                                <th>Job Description</th>
-                                <th>Positions</th>
-                                <th>Appointment Type</th>
-                                <th>Priority</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for res in job %}
-                            <tr>
-                                <td id="rap">{{res.Description}}</td>
-                                <td>{{res.Positions}}</td>
-                                <td>{{res.Appointment_Type}}</td>
-                                <td>{{res.Priority}}</td>
-                                <td>
-                                    <a type="button" href="{% url 'jobDetail' res.Job_ID res.No_ %}"
-                                        class="btn btn-success btn-icon-text" data-toggle="tooltip" data-placement="top"
-                                        title="view" style="background: #25CC88;">View
-                                        <i class="las la-external-link-alt" style="font-size: 1rem"></i>
-                                    </a>
-                                </td>
+            <div class="col-md-12">
+                <div class="card" id="home">
+                    <h4 class="mt-2 card-title text-dark ml-3">Open Jobs List</h4>
+                    <div class="card-body">
+                        <table id="example"
+                            class="display table table-striped table-bordered dt-responsive table-responsive-lg"
+                            style="width:100%">
+                            <thead>
+                                <tr id="tops">
+                                    <th>Job Description</th>
+                                    <th>Positions</th>
+                                    <th>Appointment Type</th>
+                                    <th>Priority</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for res in job %}
+                                <tr>
+                                    <td id="rap">{{res.Description}}</td>
+                                    <td>{{res.Positions}}</td>
+                                    <td>{{res.Appointment_Type}}</td>
+                                    <td>{{res.Priority}}</td>
+                                    <td>
+                                        <a type="button" href="{% url 'jobDetail' res.Job_ID res.No_ %}"
+                                            class="btn btn-success btn-icon-text" data-toggle="tooltip"
+                                            data-placement="top" title="view" style="background: #25CC88;">View
+                                            <i class="las la-external-link-alt" style="font-size: 1rem"></i>
+                                        </a>
+                                    </td>
 
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- <div class="row mb-2">
-            <div id="pagination-container"></div>
-        </div> -->
     </div>
     </div>
 </section>
-<script>
-    var items = $(".postcard");
-    var numItems = items.length;
-    var perPage = 6;
-
-    items.slice(perPage).hide();
-
-    $("#pagination-container").pagination({
-        items: numItems,
-        itemsOnPage: perPage,
-        prevText: "<<",
-        nextText: ">>",
-        onPageClick: function (pageNumber) {
-            var showFrom = perPage * (pageNumber - 1);
-            var showTo = showFrom + perPage;
-            items.hide().slice(showFrom, showTo).show();
-        }
-    })
-</script>
-
-
 {% endblock %}

@@ -9,7 +9,6 @@ urlpatterns = [
     path('profile', views.profile_request.as_view(), name="profile"),
     path('FnApplicantDetails', views.FnApplicantDetails.as_view(), name="FnApplicantDetails"),
     path('AcademicQualifications', views.AcademicQualifications.as_view(), name="AcademicQualifications"),
-    path('Counties',views.Counties.as_view(),name='Counties'),
     path('JobExperience', views.JobExperience.as_view(), name="JobExperience"),
     path('QyApplicantJobExperience', views.QyApplicantJobExperience.as_view(), name="QyApplicantJobExperience"),
     path('FnApplicantProfessionalCourse', views.FnApplicantProfessionalCourse.as_view(),name="FnApplicantProfessionalCourse"),

@@ -68,6 +68,7 @@ def JobDetail(request, pk, no):
         JobMembeships = config.O_DATA.format("/QyJobProfessionalMembeships")
         Positions = config.O_DATA.format("/QyJobPositionsSupervising")
         Attachments = config.O_DATA.format("/QyJobAttachments")
+        attachedDocs = config.O_DATA.format(f"/QyDocumentAttachments?$filter=No_%20eq%20%27{pk}%27%20and%20Table_ID%20eq%2052177607")
         res = ''
         E_response = ''
         try:
@@ -83,7 +84,8 @@ def JobDetail(request, pk, no):
             JobMembeships_res = session.get(JobMembeships, timeout=10).json()
             Positions_res = session.get(Positions, timeout=10).json()
             Attachments_res = session.get(Attachments, timeout=10).json()
-
+            Attached_res = session.get(attachedDocs, timeout=10).json()
+            
             RESPOs = []
             Skill = []
             Course = []
@@ -126,6 +128,7 @@ def JobDetail(request, pk, no):
                 if Attachments['Job_ID'] == pk:
                     output_json = json.dumps(Attachments)
                     Attachment.append(json.loads(output_json))
+            attached = [x for x in Attached_res['value']]
         except requests.exceptions.ConnectionError as e:
             print(e)
 
@@ -137,7 +140,7 @@ def JobDetail(request, pk, no):
                "RESPOs": RESPOs, "Skill": Skill,
                "Course": Course, "JobMembeship": Member,
                "Position": Position, "Attach": Attachment,
-               "my_name": my_name}
+               "my_name": my_name,"attached":attached}
     except KeyError:
         messages.error(request, "Session has expired, Login Again")
         return redirect('login')
@@ -190,32 +193,20 @@ def FnWithdrawJobApplication(request):
 
 
 def UploadAttachedDocument(request, pk, no):
-    docNo = request.session['No_']
-    response = ""
-    fileName = ""
-    attachment = ""
-    applicantNo = request.session['No_']
-    needCode = no
-    tableID = 52177607
-
     if request.method == "POST":
-        try:
-            attach = request.FILES.getlist('attachment')
-        except Exception as e:
-            print("Not Working")
-            return redirect('jobDetail', pk=pk, no=no)
+        docNo = request.session['No_']
+        applicantNo = request.session['No_']
+        needCode = no
+        tableID = 52177607
+
+        attach = request.FILES.get('attachment')
+        fileName = request.POST.get('fileName')
         responses = config.CLIENT.service.FnInitiateApplication(
             applicantNo, needCode)
-        for files in attach:
-            fileName = request.FILES['attachment'].name
-            attachment = base64.b64encode(files.read())
+        attachment = base64.b64encode(attach.read())
 
-            try:
-                response = config.CLIENT.service.FnUploadAttachedDocument(
-                    docNo, fileName, attachment, tableID)
-            except Exception as e:
-                messages.error(request, e)
-                print(e)
+        response = config.CLIENT.service.FnUploadAttachedDocument(
+                docNo, fileName, attachment, tableID)
 
         if response == True:
             messages.success(request, "Successfully Sent !!")

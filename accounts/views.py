@@ -119,7 +119,7 @@ class FnApplicantDetails(UserObjectMixins,View):
             citizenship = request.POST.get('citizenship')
             countyCode = request.POST.get('countyCode')
             maritalStatus = int(request.POST.get('maritalStatus'))
-            ethnicOrigin = int(request.POST.get('ethnicOrigin'))
+            ethnicOrigin = request.POST.get('ethnicOrigin')
             disabled = int(request.POST.get('disabled'))
             dob = request.POST.get('dob')
             phoneNumber = request.POST.get('phoneNumber')
@@ -132,6 +132,9 @@ class FnApplicantDetails(UserObjectMixins,View):
                 
             if not disabilityGrade:
                 disabilityGrade = 0
+                
+            if not ethnicOrigin:
+                ethnicOrigin = ''
             class Data(enum.Enum):
                 values = genders
             gender = (Data.values).value
@@ -176,9 +179,9 @@ class profile_request(UserObjectMixins, View):
                                                                                        applicantNo))
                 get_country = asyncio.ensure_future(self.simple_fetch_data(session,
                                                                 '/CountryRegion'))
-                # change this query to the one for tribes
+
                 get_tribes = asyncio.ensure_future(self.simple_fetch_data(session,
-                                                                    '/QyCounties'))
+                                                                    '/QyKenyanTribes'))
                 field_of_study = asyncio.ensure_future(self.simple_fetch_data(session,
                                                                               '/QyFieldsOfStudy'))
                 
@@ -190,10 +193,14 @@ class profile_request(UserObjectMixins, View):
                 
                 pro_bodies = asyncio.ensure_future(self.simple_fetch_data(session,
                                                                           '/QyProfessionalBodies'))
+                get_counties = asyncio.ensure_future(self.simple_fetch_data(session,
+                                                                    '/QyCounties'))
+                get_func_areas = asyncio.ensure_future(self.simple_fetch_data(session,
+                                                                    '/QyFunctionalAreas'))
                 
                 response = await asyncio.gather(personal_details,get_country,
                                                 get_tribes,field_of_study,qualifications,
-                                                    job_industries,pro_bodies)
+                                                    job_industries,pro_bodies,get_counties,get_func_areas)
                 
                 for data in response[0]:
                     personal_info = data
@@ -203,6 +210,8 @@ class profile_request(UserObjectMixins, View):
                 qualifications = [qualification for qualification in response[4]]
                 industry = [industry for industry in response[5]]
                 Bodies = [body for body in response[6]]
+                county = [county for county in response[7]]
+                functional_areas = [areas for areas in response[8]]
 
             ctx = {
                 "applicant": personal_info,
@@ -213,6 +222,8 @@ class profile_request(UserObjectMixins, View):
                 'industry':industry,
                 'pro_bodies':Bodies,
                 "my_name": full_name,
+                'county':county,
+                'functional_areas':functional_areas,
             }
 
         except KeyError:
@@ -223,17 +234,7 @@ class profile_request(UserObjectMixins, View):
             print(e)
             return redirect('dashboard')
         return render(request, 'profile.html', ctx)
-    
-class Counties(UserObjectMixins,View):
-    def get(self,request):    
-        try:
-            counties = self.get_object('/QyCounties')
-            return JsonResponse(counties, safe=False)
-
-        except Exception as e:
-            print(e)
-            return JsonResponse({'error': str(e)}, safe=False)
-        
+            
 class AcademicQualifications(UserObjectMixins,View):
     def get(self,request):    
         try:

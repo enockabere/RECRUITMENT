@@ -63,3 +63,77 @@ Communication:
 • Learn to prioritize.
 • Learn to delegate.
 • Learn to say no.
+
+
+            try:
+                response = session.get(citizenship, timeout=10).json()
+                county_res = session.get(countyCode, timeout=10).json()
+                industry_res = session.get(industry, timeout=10).json()
+                Qualification_res = session.get(
+                    Qualification, timeout=10).json()
+                ProfessionalBodies_res = session.get(
+                    ProfessionalBodies, timeout=10).json()
+
+                Study_res = session.get(Study, timeout=10).json()
+                App_response = session.get(Access_Point, timeout=10).json()
+                Qualifications_res = session.get(
+                    Qualifications, timeout=10).json()
+                Experience_res = session.get(Experience, timeout=10).json()
+                Courses_res = session.get(Courses, timeout=10).json()
+                Memberships_res = session.get(Memberships, timeout=10).json()
+                Hobbies_res = session.get(Hobbies, timeout=10).json()
+                Referees_Res = session.get(Referees, timeout=10).json()
+
+                for applicant in App_response['value']:
+                    if applicant['No_'] == request.session['No_']:
+                        fullname = applicant['First_Name'] + \
+                            " " + applicant['Last_Name']
+
+                        request.session['username'] = fullname
+                        username = request.session['username']
+                        res = applicant
+                for Qualifications in Qualifications_res['value']:
+                    if Qualifications['Applicant_No_'] == request.session['No_']:
+                        output_json = json.dumps(Qualifications)
+                        My_Qualifications.append(json.loads(output_json))
+                for Experience in Experience_res['value']:
+                    if Experience['Applicant_No_'] == request.session['No_']:
+                        output_json = json.dumps(Experience)
+                        My_Experience.append(json.loads(output_json))
+                for course in Courses_res['value']:
+                    if course['Applicant_No_'] == request.session['No_']:
+                        output_json = json.dumps(course)
+                        My_Course.append(json.loads(output_json))
+                for membership in Memberships_res['value']:
+                    if membership['Applicant_No_'] == request.session['No_']:
+                        output_json = json.dumps(membership)
+                        My_Membership.append(json.loads(output_json))
+                for hobby in Hobbies_res['value']:
+                    if hobby['No_'] == request.session['No_']:
+                        output_json = json.dumps(hobby)
+                        My_Hobby.append(json.loads(output_json))
+                for ref in Referees_Res['value']:
+                    if ref['No'] == request.session['No_']:
+                        output_json = json.dumps(ref)
+                        My_Referees.append(json.loads(output_json))
+                country = response['value']
+                county = county_res['value']
+                ind = industry_res['value']
+                Quo = Qualification_res['value']
+                Pro = ProfessionalBodies_res['value']
+                FStudy = Study_res['value']
+            except requests.exceptions.ConnectionError as e:
+                print(e)
+
+            my_name = request.session['E_Mail']
+
+            todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
+            ctx = {"country": country,
+                   "county": county, "industry": ind,
+                   "Quo": Quo, "Pro": Pro,
+                   "Study": FStudy, "applicant": res,
+                   "fullname": fullname, "Qualify": My_Qualifications,
+                   "experience": My_Experience, "course": My_Course,
+                   "membership": My_Membership, "hobby": My_Hobby,
+                   "Referee": My_Referees, "today": todays_date,
+                   "my_name": my_name}
