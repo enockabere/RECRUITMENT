@@ -111,13 +111,16 @@
                                         <select class="form-select" name="gender" required>
                                             {% if applicant.Gender == 'Male' %}
                                             <option value="1" selected>Male</option>
+                                            <option value="2">Female</option>
                                             {% elif applicant.Gender == 'Female' %}
                                             <option value="2" selected>Female</option>
-                                            {% endif %}
+                                            <option value="1">Male</option>
+                                            {% else %}
                                             <option selected disabled value="0">
                                                 --select--</option>
                                             <option value="1">Male</option>
                                             <option value="2">Female</option>
+                                            {% endif %}
                                         </select>
                                     </div>
                                     <div class="col-md-4">

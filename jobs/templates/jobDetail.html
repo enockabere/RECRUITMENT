@@ -53,12 +53,12 @@
                     <div class="card-statistic-3 p-4">
                         <div class="card-icon card-icon-large"><i class="fas fa-users"></i></div>
                         <div class="mb-4">
-                            <h5 class="card-title mb-0">Priority</h5>
+                            <h5 class="card-title mb-0">Applications Start Date</h5>
                         </div>
                         <div class="row align-items-center mb-2 d-flex">
                             <div class="col-md-12">
                                 <h2 class="d-flex align-items-center mb-0">
-                                    {{res.Priority}}
+                                    {{res.Start_Date}}
                                 </h2>
                             </div>
 
@@ -71,12 +71,12 @@
                     <div class="card-statistic-3 p-4">
                         <div class="card-icon card-icon-large"><i class="fas fa-briefcase"></i></div>
                         <div class="mb-4">
-                            <h5 class="card-title mb-0">Expected Reporting Date</h5>
+                            <h5 class="card-title mb-0">Applications End Date</h5>
                         </div>
                         <div class="row align-items-center mb-2 d-flex">
                             <div class="col-md-12">
                                 <h2 class="d-flex align-items-center mb-0">
-                                    {{res.Expected_Reporting_Date}}
+                                    {{res.End_Date}}
                                 </h2>
                             </div>
                         </div>
@@ -100,44 +100,6 @@
                         </div>
                     </div>
                 </div>
-            </div>
-        </div>
-        <div class="row">
-            <div class="col-md-12">
-                <form class="bg-white p-3" action="{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}" method="POST"
-                    enctype="multipart/form-data" novalidate>
-                    {% csrf_token %}
-                    <div class="row">
-                        <div class="col-md-12">
-                            <label class="form-label">Select Attachment</label>
-                            <select class="form-select" name="fileName" required>
-                                <option selected disabled value="">Choose...</option>
-                                {% for attach in Attach %}
-                                {% with attachment_exists=False %}
-                                {% for attached in second_list %}
-                                {% if attached.File_Name == attach.Attachment %}
-                                {% with attachment_exists=True %}
-                                {% endwith %}
-                                {% endif %}
-                                {% endfor %}
-                                {% if not attachment_exists %}
-                                <option value="{{ attach.Attachment }}">{{ attach.Description }}</option>
-                                {% endif %}
-                                {% endwith %}
-                                {% empty %}
-                                <option value="0">Job has no Attachments</option>
-                                {% endfor %}
-                            </select>
-                        </div>
-                    </div>
-                    <div class="row" id="attachment-row" style="display: none;">
-                        <div class="col-md-12">
-                            <label class="form-label">Attachment</label>
-                            <input type="file" class="form-control" id="" name="attachment">
-                            <button type="submit" class="btn btn-primary w-100 my-3">Submit</button>
-                        </div>
-                    </div>
-                </form>
             </div>
         </div>
         <div class="row mt-5">
@@ -226,6 +188,59 @@
                                             </div>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="row my-3">
+                                    <div class="col-md-12">
+                                        <form class="bg-white py-3"
+                                            action="{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}" method="POST"
+                                            enctype="multipart/form-data" novalidate>
+                                            {% csrf_token %}
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="form-label">Upload Attachment <span
+                                                            class="text-danger">*</span></label>
+                                                    <select class="form-select" name="fileName" required>
+                                                        <option value="0" selected disabled>--select--</option>
+                                                        {% for response in Attach %}
+                                                        <option value="{{response.Attachment}}">{{response.Description}}
+                                                        </option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <label class="form-label">Attachment</label>
+                                                    <input type="file" class="form-control" id="" name="attachment">
+                                                    <button type="submit"
+                                                        class="btn btn-primary w-100 my-3">Submit</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                    </div>
+                                    {% for data in attached_list %}
+                                    <div class="col-lg-4 col-xl-3">
+                                        <div class="file-man-box">
+                                            <form action="" method="POST">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="docID" value="{{data.AuxiliaryIndex2}}">
+                                                <input type="hidden" name="tableID" value="{{data.Table_ID}}">
+                                                <button class="file-close" id="file-close"><i
+                                                        class="fa fa-times-circle"></i></button>
+                                            </form>
+                                            <div class="file-img-box"><img
+                                                    src="../../static/img/icons/file_download.png" alt="icon"></div>
+                                            <div class="file-man-title p-3">
+                                                <h5 class="mb-0 text-overflow">
+                                                    {{data.File_Name}}.{{data.File_Extension}}</h5>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% empty %}
+                                    <p class="text-danger">
+                                        You have not uploaded any attachments <i class="las la-file-download"></i>
+                                    </p>
+                                    {% endfor %}
                                 </div>
                             </div>
                         </div>
@@ -454,43 +469,9 @@
                 </div>
             </div>
         </div>
+
     </div>
 </section>
 
-<!-- Modal -->
-<div class="modal fade" id="attachedCv" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-    aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="staticBackdropLabel">Upload Curriculum Vitae</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="{% url 'UploadAttachedDocument' res.Job_ID res.No_ %}" method="post" class="myForm"
-                    enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <div class=" mb-3">
-                        <label class="form-label">Attachment</label>
-                        <input class="form-control" name="attachment" type="file">
-                    </div>
-                    <button type="submit" class="button-88 my-3 w-100">Submit <i
-                            class="las la-arrow-right submit-icon"></i></button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('select[name="fileName"]').change(function () {
-            if ($(this).val()) {
-                $('#attachment-row').show(1000);
-            } else {
-                $('#attachment-row').hide(1000);
-            }
-        });
-    });
-</script>
 {% endblock %}

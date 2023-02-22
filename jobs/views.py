@@ -68,70 +68,71 @@ def JobDetail(request, pk, no):
         JobMembeships = config.O_DATA.format("/QyJobProfessionalMembeships")
         Positions = config.O_DATA.format("/QyJobPositionsSupervising")
         Attachments = config.O_DATA.format("/QyJobAttachments")
-        attachedDocs = config.O_DATA.format(f"/QyDocumentAttachments?$filter=No_%20eq%20%27{pk}%27%20and%20Table_ID%20eq%2052177607")
+        attachedDocs = config.O_DATA.format(f"/QyDocumentAttachments?$filter=No_%20eq%20%27{no}%27")
         res = ''
         E_response = ''
-        try:
-            response = session.get(Access_Point, timeout=10).json()
-            Qualifications_res = session.get(Qualifications, timeout=10).json()
-            Experience_res = session.get(Experience, timeout=10).json()
-            Industry_res = session.get(Industry, timeout=10).json()
-            Memberships_res = session.get(Memberships, timeout=10).json()
-            Responsibilities_res = session.get(
-                Responsibilities, timeout=10).json()
-            Skills_res = session.get(Skills, timeout=10).json()
-            Courses_res = session.get(Courses, timeout=10).json()
-            JobMembeships_res = session.get(JobMembeships, timeout=10).json()
-            Positions_res = session.get(Positions, timeout=10).json()
-            Attachments_res = session.get(Attachments, timeout=10).json()
-            Attached_res = session.get(attachedDocs, timeout=10).json()
-            
-            RESPOs = []
-            Skill = []
-            Course = []
-            Member = []
-            Position = []
-            Attachment = []
+    
+        response = session.get(Access_Point, timeout=10).json()
+        Qualifications_res = session.get(Qualifications, timeout=10).json()
+        Experience_res = session.get(Experience, timeout=10).json()
+        Industry_res = session.get(Industry, timeout=10).json()
+        Memberships_res = session.get(Memberships, timeout=10).json()
+        Responsibilities_res = session.get(
+            Responsibilities, timeout=10).json()
+        Skills_res = session.get(Skills, timeout=10).json()
+        Courses_res = session.get(Courses, timeout=10).json()
+        JobMembeships_res = session.get(JobMembeships, timeout=10).json()
+        Positions_res = session.get(Positions, timeout=10).json()
+        Attachments_res = session.get(Attachments, timeout=10).json()
+        Attached_res = session.get(attachedDocs, timeout=10).json()
+        
+        RESPOs = []
+        Skill = []
+        Course = []
+        Member = []
+        Position = []
+        Attachment = []
 
-            All_Industry = Industry_res['value']
-            All_Memberships = Memberships_res['value']
-            for job in response['value']:
-                if job['Job_ID'] == pk:
-                    res = job
-            for Qualifications in Qualifications_res['value']:
-                if Qualifications['Job_ID'] == pk:
-                    response = Qualifications
-            for Experience in Experience_res['value']:
-                if Experience['Job_ID'] == pk:
-                    E_response = Experience
-            for Responsibilities in Responsibilities_res['value']:
-                if Responsibilities['Code'] == pk:
-                    output_json = json.dumps(Responsibilities)
-                    RESPOs.append(json.loads(output_json))
-            for Skills in Skills_res['value']:
-                if Skills['Code'] == pk:
-                    output_json = json.dumps(Skills)
-                    Skill.append(json.loads(output_json))
-            for Courses in Courses_res['value']:
-                if Courses['Job_ID'] == pk:
-                    output_json = json.dumps(Courses)
-                    Course.append(json.loads(output_json))
-            for JobMembeship in JobMembeships_res['value']:
-                if JobMembeship['Job_ID'] == pk:
-                    output_json = json.dumps(JobMembeship)
-                    Member.append(json.loads(output_json))
-            for Positions in Positions_res['value']:
-                if Positions['Job_ID'] == pk:
-                    output_json = json.dumps(Positions)
-                    Position.append(json.loads(output_json))
-            for Attachments in Attachments_res['value']:
-                if Attachments['Job_ID'] == pk:
-                    output_json = json.dumps(Attachments)
-                    Attachment.append(json.loads(output_json))
-            attached = [x for x in Attached_res['value']]
-        except requests.exceptions.ConnectionError as e:
-            print(e)
+        All_Industry = Industry_res['value']
+        All_Memberships = Memberships_res['value']
+        for job in response['value']:
+            if job['Job_ID'] == pk:
+                res = job
+        for Qualifications in Qualifications_res['value']:
+            if Qualifications['Job_ID'] == pk:
+                response = Qualifications
+        for Experience in Experience_res['value']:
+            if Experience['Job_ID'] == pk:
+                E_response = Experience
+        for Responsibilities in Responsibilities_res['value']:
+            if Responsibilities['Code'] == pk:
+                output_json = json.dumps(Responsibilities)
+                RESPOs.append(json.loads(output_json))
+        for Skills in Skills_res['value']:
+            if Skills['Code'] == pk:
+                output_json = json.dumps(Skills)
+                Skill.append(json.loads(output_json))
+        for Courses in Courses_res['value']:
+            if Courses['Job_ID'] == pk:
+                output_json = json.dumps(Courses)
+                Course.append(json.loads(output_json))
+        for JobMembeship in JobMembeships_res['value']:
+            if JobMembeship['Job_ID'] == pk:
+                output_json = json.dumps(JobMembeship)
+                Member.append(json.loads(output_json))
+        for Positions in Positions_res['value']:
+            if Positions['Job_ID'] == pk:
+                output_json = json.dumps(Positions)
+                Position.append(json.loads(output_json))
+        attached = [x for x in Attached_res['value']]
+        for Attachments in Attachments_res['value']:
+            if Attachments['Job_ID'] == pk:
+                for docs in attached:
+                    if docs['File_Name'] != Attachments['Attachment']:
+                        output_json = json.dumps(Attachments)
+                        Attachment.append(json.loads(output_json))
 
+        print(attached)
         my_name = request.session['E_Mail']
         todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
         ctx = {"today": todays_date, "res": res,
@@ -140,10 +141,12 @@ def JobDetail(request, pk, no):
                "RESPOs": RESPOs, "Skill": Skill,
                "Course": Course, "JobMembeship": Member,
                "Position": Position, "Attach": Attachment,
-               "my_name": my_name,"attached":attached}
-    except KeyError:
+               "my_name": my_name,"attached_list":attached
+               }
+    except Exception as e:
         messages.error(request, "Session has expired, Login Again")
-        return redirect('login')
+        print(e)
+        return redirect('dashboard')
     return render(request, 'jobDetail.html', ctx)
 
 
@@ -194,19 +197,16 @@ def FnWithdrawJobApplication(request):
 
 def UploadAttachedDocument(request, pk, no):
     if request.method == "POST":
-        docNo = request.session['No_']
         applicantNo = request.session['No_']
         needCode = no
-        tableID = 52177607
+        tableID = 52177523
 
         attach = request.FILES.get('attachment')
         fileName = request.POST.get('fileName')
-        responses = config.CLIENT.service.FnInitiateApplication(
-            applicantNo, needCode)
         attachment = base64.b64encode(attach.read())
 
         response = config.CLIENT.service.FnUploadAttachedDocument(
-                docNo, fileName, attachment, tableID)
+                no, fileName, attachment, tableID,applicantNo)
 
         if response == True:
             messages.success(request, "Successfully Sent !!")
