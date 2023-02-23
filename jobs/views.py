@@ -67,7 +67,7 @@ def JobDetail(request, pk, no):
         Courses = config.O_DATA.format("/QyProfessionalCourses")
         JobMembeships = config.O_DATA.format("/QyJobProfessionalMembeships")
         Positions = config.O_DATA.format("/QyJobPositionsSupervising")
-        Attachments = config.O_DATA.format("/QyJobAttachments")
+        Attachments = config.O_DATA.format(f"/QyJobAttachments?$filter=Job_ID%20eq%20%27{pk}%27")
         attachedDocs = config.O_DATA.format(f"/QyDocumentAttachments?$filter=No_%20eq%20%27{no}%27")
         res = ''
         E_response = ''
@@ -124,15 +124,15 @@ def JobDetail(request, pk, no):
             if Positions['Job_ID'] == pk:
                 output_json = json.dumps(Positions)
                 Position.append(json.loads(output_json))
-        attached = [x for x in Attached_res['value']]
-        for Attachments in Attachments_res['value']:
-            if Attachments['Job_ID'] == pk:
-                for docs in attached:
-                    if docs['File_Name'] != Attachments['Attachment']:
-                        output_json = json.dumps(Attachments)
-                        Attachment.append(json.loads(output_json))
+        attached = [x for x in Attached_res['value']]  
+        required_files = [x for x in Attachments_res['value']]
+        if attached:
+            required_files = [d for d in required_files if all(
+                d.get('Attachment') != a.get('File_Name') for a in attached)]
+        else:
+            required_files = required_files
 
-        print(attached)
+
         my_name = request.session['E_Mail']
         todays_date = datetime.datetime.now().strftime("%b. %d, %Y %A")
         ctx = {"today": todays_date, "res": res,
@@ -140,7 +140,7 @@ def JobDetail(request, pk, no):
                "industry": All_Industry, "member": All_Memberships,
                "RESPOs": RESPOs, "Skill": Skill,
                "Course": Course, "JobMembeship": Member,
-               "Position": Position, "Attach": Attachment,
+               "Position": Position, "Attach": required_files,
                "my_name": my_name,"attached_list":attached
                }
     except Exception as e:
@@ -204,7 +204,7 @@ def UploadAttachedDocument(request, pk, no):
         attach = request.FILES.get('attachment')
         fileName = request.POST.get('fileName')
         attachment = base64.b64encode(attach.read())
-
+        
         response = config.CLIENT.service.FnUploadAttachedDocument(
                 no, fileName, attachment, tableID,applicantNo)
 
