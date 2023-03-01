@@ -9,7 +9,7 @@
             <div class="col-12">
                 <span class="d-flex align-items-center purchase-popup">
                     <img src="../../../static/img/logo/fav.png" width="70px" class="img-fluid" alt="" srcset="">
-                    <h2 class="text-dark font-weight-bold ml-3"> Job Openings </h2>
+                    <h2 class="text-dark font-weight-bold ml-3"> Job Vacancies </h2>
                     <button class="btn btn-success align-items-center p-3"
                         style="margin-left: auto;margin-right:0;outline: none;border: none;">{{today}}</button>
                 </span>
@@ -40,10 +40,11 @@
                                         style="width:100%">
                                         <thead>
                                             <tr id="tops">
-                                                <th>Job Description</th>
+                                                <th>Job Title</th>
                                                 <th>Positions</th>
+                                                <th>Job Grade</th>
                                                 <th>Appointment Type</th>
-                                                <th>Priority</th>
+                                                <th>Closing Date</th>
                                                 <th>Action</th>
                                             </tr>
                                         </thead>
@@ -52,6 +53,7 @@
                                             <tr>
                                                 <td id="rap">{{res.Description}}</td>
                                                 <td>{{res.Positions}}</td>
+                                                <td></td>
                                                 <td>{{res.Appointment_Type}}</td>
                                                 <td>{{res.Priority}}</td>
                                                 <td>
