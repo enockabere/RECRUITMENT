@@ -9,6 +9,8 @@ from django.conf import settings as config
 import datetime
 from datetime import date
 from django.contrib import messages
+from django.core.files.uploadedfile import UploadedFile
+from django.core.exceptions import ValidationError
 # Create your views here.
 
 
@@ -202,6 +204,10 @@ def UploadAttachedDocument(request, pk, no):
         tableID = 52177523
 
         attach = request.FILES.get('attachment')
+        # check the file size before processing it
+        if attach and attach.size > 5242880: # 5 MB in bytes
+            messages.error(request, "File size must be under 5 MB")
+            return redirect('jobDetail', pk=pk, no=no)
         fileName = request.POST.get('fileName')
         attachment = base64.b64encode(attach.read())
         

@@ -186,3 +186,5 @@ AUTHS.auth = HTTPBasicAuth('EMAEBA', WEB_SERVICE_PWD)
 
 CLIENT = Client(BASE_URL, transport=Transport(session=AUTHS))
 AUTHS = HTTPBasicAuth('EMAEBA', WEB_SERVICE_PWD)
+
+MAX_UPLOAD_SIZE = 5242880 # 5 MB
