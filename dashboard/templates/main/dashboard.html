@@ -64,10 +64,11 @@
                             style="width:100%">
                             <thead>
                                 <tr id="tops">
-                                    <th>Job Description</th>
+                                    <th>Job Title</th>
                                     <th>Positions</th>
+                                    <th>Job Grade</th>
                                     <th>Appointment Type</th>
-                                    <th>Priority</th>
+                                    <th>Closing Date</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -76,8 +77,9 @@
                                 <tr>
                                     <td id="rap">{{res.Description}}</td>
                                     <td>{{res.Positions}}</td>
-                                    <td>{{res.Appointment_Type}}</td>
                                     <td>{{res.Priority}}</td>
+                                    <td>{{res.Appointment_Type}}</td>
+                                    <td>{{res.End_Date}}</td>
                                     <td>
                                         <a type="button" href="{% url 'jobDetail' res.Job_ID res.No_ %}"
                                             class="btn btn-success btn-icon-text" data-toggle="tooltip"

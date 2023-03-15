@@ -20,6 +20,8 @@
     <link rel="stylesheet" href="../../static/css/auth.css">
     <link rel="stylesheet" href="../../static/css/base.css">
     <link rel="shortcut icon" type="image/png" href="../../static/img/logo/fav.png" />
+    <link rel="stylesheet" href="../../static/plugins/iziToast-master/dist/css/iziToast.min.css" />
+    <script src="../../static/plugins/iziToast-master/dist/js/iziToast.min.js" type="text/javascript"></script>
 </head>
 
 <body>
@@ -48,14 +50,14 @@
                         <div class="col-md-12">
                             <div class="l-text mx-auto text-center">
                                 <p>
-                                    Coordinating and Execute priority regional and continental
+                                    To regulate the training, practice and licensing of medicine & dentistry and
+                                    healthcare
+                                    institutions that include private & mission hospitals, medical, dental centers &
+                                    clinics, nursing and maternity homes and standalone funeral homes.
                                 </p>
-                                <p>
-                                    projects to promote regional integration towards the
-                                </p>
-                                <p>
-                                    accelerated realisation of Agenda 2063.
-                                </p>
+                                <button class="btn transparent my-2" id="sign-up-btn">
+                                    Download Manual <i class="las la-arrow-down download-icon"></i>
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -64,15 +66,6 @@
                             <div class="l-image mx-auto text-center mb-3">
                                 <img src='../../static/img/logo/gok_logo.png' class="img-fluid" alt="brand image"
                                     srcset="">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="f-text">
-                                <p>
-                                    © {{year}} Kenya Medical Practitioners and Dentists Council
-                                </p>
                             </div>
                         </div>
                     </div>
@@ -126,16 +119,19 @@
                                                     placeholder="Confirm Password" required="required">
                                             </div>
                                         </div>
-                                        <div class="form-group">
-                                            <button type="submit" class="btn btn-primary btn-block btn-lg">Sign
-                                                Up</button>
-                                        </div>
-                                        <p class="small">By clicking the Sign Up button, you agree to our<br><a
-                                                href="#">Terms &amp; Conditions</a>, and <a href="#">Privacy Policy</a>.
+                                        <p class="small">We endeavour to ensure that the data you submitted to us
+                                            remains confidential and is used for the purposes of recruitment only.
                                         </p>
-                                        <div class="form-check">
-                                            <input class="form-check-input" type="checkbox" name="agree" id="agree">
-                                            <label class="form-check-label" for="agree">Agree to terms and conditions</label>
+                                        <div class="form-check my-4">
+                                            <input class="form-check-input" type="checkbox" name="agree" id="agree"
+                                                required>
+                                            <label class="form-check-label" for="agree"> Yes, I accept my data to be
+                                                used for the purpose of recruitment.</label>
+                                        </div>
+                                        <div class="form-group">
+                                            <button type="submit" class="button-88 w-100">Sign
+                                                Up <i class="las la-arrow-right"></i></button>
+
                                         </div>
                                     </form>
                                 </div>

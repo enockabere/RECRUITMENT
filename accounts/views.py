@@ -16,95 +16,140 @@ import asyncio
 from asgiref.sync import sync_to_async
 import enum
 from django.http import JsonResponse
+import secrets
+import string
+from django.core.mail import EmailMessage
+from django.contrib.sites.shortcuts import get_current_site
+from  django.template.loader import render_to_string
 # Create your views here.
 
+class EmailThread(threading.Thread):
+    def __init__(self, email):
+        self.email = email
+        threading.Thread.__init__(self)
 
-def login_request(request):
-    session = requests.Session()
-    session.auth = config.AUTHS
+    def run(self):
+        self.email.send()
 
-    Access_Point = config.O_DATA.format("/QyApplicants")
-    username = ''
-    Portal_Password = ""
-    if request.method == 'POST':
+def send_mail(email,verificationToken,request):
+    current_site = get_current_site(request)
+    email_subject = 'Activate Your Account'
+    email_body = render_to_string('activate.html',{
+        'domain': current_site,
+        'Secret': verificationToken,
+    })
 
+    email = EmailMessage(subject=email_subject,body=email_body,
+    from_email=config.EMAIL_HOST_USER,to=[email])
+
+    EmailThread(email).start()
+
+class login_request(UserObjectMixins,View):
+    async def get(self,request):
+        return render(request, 'login.html')
+    async def post(self,request):
         try:
             email = request.POST.get('email').strip()
             password = request.POST.get('password')
-        except ValueError:
-            messages.error(request, "Invalid credentials, try again")
-            return redirect('login')
-        try:
-            response = session.get(Access_Point, timeout=10).json()
-            for applicant in response['value']:
-                if applicant['E_Mail'] == email:
-                    try:
+            async with aiohttp.ClientSession() as session:
+                task_get_users = asyncio.ensure_future(self.simple_one_filtered_data(session,"/QyApplicants",
+                                                                                                "E_Mail","eq",email))
+                response = await asyncio.gather(task_get_users)
+                for applicant in response[0]:
+                    if applicant['Email_Verified'] == True:
                         Portal_Password = base64.urlsafe_b64decode(
-                            applicant['Portal_Password'])
-                        request.session['No_'] = applicant['No_']
-                        request.session['E_Mail'] = applicant['E_Mail']
-                        request.session['full_name'] = applicant['First_Name'] + " " + applicant['Last_Name']
+                                                            applicant['Portal_Password'])
+                        await sync_to_async(request.session.__setitem__)('No_', applicant['No_'])
+                        await sync_to_async(request.session.__setitem__)('E_Mail', applicant['E_Mail'])
+                        await sync_to_async(request.session.__setitem__)('full_name',applicant['First_Name'] + " " + applicant['Last_Name'])
+                        await sync_to_async(request.session.save)()
 
-                    except Exception as e:
-                        messages.error(request, e)
-                        return redirect('login')
-        except requests.exceptions.ConnectionError as e:
-            print(e)
 
-        cipher_suite = Fernet(config.ENCRYPT_KEY)
-        try:
-            decoded_text = cipher_suite.decrypt(
-                Portal_Password).decode("ascii")
+                        cipher_suite = Fernet(config.ENCRYPT_KEY)
+                        decoded_text = cipher_suite.decrypt(Portal_Password).decode("ascii")
+        
+                        if decoded_text == password:
+                            return redirect('dashboard')
+                        else:
+                            messages.error(request, "Invalid Credentials")
+                            return redirect('login')
+                    messages.error(request, "Email not verified")
+                    return redirect('login')
+                messages.error(request, "Email not registered")
+                return redirect('login')
         except Exception as e:
-            messages.error(request, e)
+            messages.error(request, f'{e}')
             return redirect('login')
-        if decoded_text == password:
-            return redirect('dashboard')
-        else:
-            messages.error(
-                request, "Invalid Credentials")
-            return redirect('login')
-    ctx = { "username": username}
-    return render(request, 'login.html', ctx)
-
-
-def register_request(request):
-    password = ''
-    confirm_password = ''
-
-    if request.method == 'POST':
+class register_request(UserObjectMixins,View):
+    def get(self,request):
+        return render(request, "register.html")
+    def post(self,request):
         try:
             email = request.POST.get('email').strip()
             my_password = str(request.POST.get('password'))
             confirm_password = str(
                 request.POST.get('confirm_password')).strip()
-        except ValueError:
-            messages.error(request, "Invalid credentials, try again")
-            return redirect('register')
-        if len(my_password) < 6:
-            messages.error(request, "Password should be at least 6 characters")
-            return redirect('register')
-        if my_password != confirm_password:
-            messages.error(request, "Password mismatch")
-            return redirect('register')
-        cipher_suite = Fernet(config.ENCRYPT_KEY)
+            agree= request.POST.get('agree')
+            dataPrivacy = False
+            if agree == 'on':
+                dataPrivacy = True
+                
+            if len(my_password) < 6:
+                messages.error(request, "Password should be at least 6 characters")
+                return redirect('register')
+            if my_password != confirm_password:
+                messages.error(request, "Password mismatch")
+                return redirect('register')
+            if dataPrivacy == True:
+                cipher_suite = Fernet(config.ENCRYPT_KEY)
 
-        encrypted_text = cipher_suite.encrypt(my_password.encode('ascii'))
-        password = base64.urlsafe_b64encode(encrypted_text).decode("ascii")
-
-        try:
-            response = config.CLIENT.service.FnApplicantRegister(
-                email, password)
-            messages.success(
-                request, "Account successfully created, you can now login")
-            print(response)
-            return redirect('login')
+                encrypted_text = cipher_suite.encrypt(my_password.encode('ascii'))
+                password = base64.urlsafe_b64encode(encrypted_text).decode("ascii")
+                
+                nameChars = ''.join(secrets.choice(string.ascii_uppercase + string.digits)
+                        for i in range(5))
+                verificationToken = str(nameChars)
+                
+                response = self.make_soap_request('FnApplicantRegister',
+                                                    email, password,dataPrivacy,verificationToken)
+                if response == True:
+                    send_mail(email,verificationToken,request)
+                    messages.success(request, 'We sent you an email to verify your account')
+                    return redirect('login')
+                
+            messages.error(request,'You have to  I accept your data to be used for the purpose of recruitment')
+            return redirect('register')
         except Exception as e:
             messages.error(request, e)
             print(e)
-    ctx = {}
-    return render(request, "register.html", ctx)
-
+            return redirect('register')
+        
+class verifyRequest(UserObjectMixins,View):
+    async def get(self,request):
+        return render(request,"verify.html")
+    async def post(self,request):
+        try:
+            email = request.POST.get('email')
+            secret = request.POST.get('secret')
+            verified = True
+            async with aiohttp.ClientSession() as session:
+                task_get_users = asyncio.ensure_future(self.simple_one_filtered_data(session,"/QyApplicants",
+                                                                                                "E_Mail","eq",email))
+                response = await asyncio.gather(task_get_users)
+                for res in response[0]:
+                    if res['Verification_Token'] == secret:
+                        response = self.make_soap_request('FnVerifyEmailAddress',
+                                                          email,verified)
+                        if response == True:
+                            messages.success(request,"Verification Successful")
+                            return redirect('login')
+                        messages.error(request, f"{response}")
+                        print(response)
+                        return redirect('verify')
+        except Exception as e:
+            print(e)
+            messages.error(request,e)
+            return redirect('verify')
 
 class FnApplicantDetails(UserObjectMixins,View):
     def post(self,request):
